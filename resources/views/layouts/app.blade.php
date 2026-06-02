@@ -32,19 +32,6 @@
                 {{ $slot }}
             </main>
 
-            <!-- Title Bar -->
-            <div class="bg-white border-b">
-                <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-                    <h1 class="text-lg font-semibold">
-                        SuciTrack Dashboard
-                    </h1>
-
-                    <span class="text-sm text-gray-500">
-                        Menstrual Tracker + Prayer Integration System
-                    </span>
-                </div>
-            </div>
-
             <!-- FOOTER -->
             <footer class="bg-white border-t mt-10">
                 <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between text-sm text-gray-500">

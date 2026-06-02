@@ -110,6 +110,31 @@
 
             </div>
 
+            <!-- REMINDER CARD -->
+            <div class="bg-yellow-50 border border-yellow-200 rounded-lg shadow p-5 mt-6">
+
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="text-xl">🔔</span>
+
+                    <h4 class="font-semibold text-yellow-800">
+                        Reminder Notification
+                    </h4>
+                </div>
+
+                <p class="text-sm text-yellow-700">
+                    Prayer reminders and qada' prayer notifications will be displayed here.
+                </p>
+
+                <div class="mt-3 text-sm text-gray-600">
+                    Example:
+                    <br>
+                    • Maghrib prayer is approaching.
+                    <br>
+                    • Check your menstrual cycle status before prayer.
+                </div>
+
+            </div>
+
         </div>
     </div>
 </x-app-layout>
