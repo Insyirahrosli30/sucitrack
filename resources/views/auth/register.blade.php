@@ -1,60 +1,132 @@
 <x-guest-layout>
-    <x-authentication-card>
-        <x-slot name="logo">
-            <x-authentication-card-logo />
-        </x-slot>
+    <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-50 via-white to-purple-50 px-4 py-10">
 
-        <x-validation-errors class="mb-4" />
+        <div class="w-full max-w-md bg-white/90 backdrop-blur-md shadow-2xl rounded-3xl border border-white/50 overflow-hidden">
 
-        <form method="POST" action="{{ route('register') }}">
-            @csrf
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-pink-300 via-pink-200 to-purple-300 p-8 text-center">
 
-            <div>
-                <x-label for="name" value="{{ __('Name') }}" />
-                <x-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            </div>
-
-            <div class="mt-4">
-                <x-label for="email" value="{{ __('Email') }}" />
-                <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            </div>
-
-            <div class="mt-4">
-                <x-label for="password" value="{{ __('Password') }}" />
-                <x-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
-            </div>
-
-            <div class="mt-4">
-                <x-label for="password_confirmation" value="{{ __('Confirm Password') }}" />
-                <x-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" required autocomplete="new-password" />
-            </div>
-
-            @if (Laravel\Jetstream\Jetstream::hasTermsAndPrivacyPolicyFeature())
-                <div class="mt-4">
-                    <x-label for="terms">
-                        <div class="flex items-center">
-                            <x-checkbox name="terms" id="terms" required />
-
-                            <div class="ms-2">
-                                {!! __('I agree to the :terms_of_service and :privacy_policy', [
-                                        'terms_of_service' => '<a target="_blank" href="'.route('terms.show').'" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">'.__('Terms of Service').'</a>',
-                                        'privacy_policy' => '<a target="_blank" href="'.route('policy.show').'" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">'.__('Privacy Policy').'</a>',
-                                ]) !!}
-                            </div>
-                        </div>
-                    </x-label>
+                <div class="text-5xl mb-2">
+                    🌙
                 </div>
-            @endif
 
-            <div class="flex items-center justify-end mt-4">
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
-                    {{ __('Already registered?') }}
-                </a>
+                <h1
+                    style="
+                    font-family:'Cinzel', serif;
+                    font-size:50px;
+                    letter-spacing:2px;
+                    font-weight:700;
+                    color:white;
+                    text-shadow:
+                        -1px -1px 0 #ec4899,
+                         1px -1px 0 #ec4899,
+                        -1px  1px 0 #a855f7,
+                         1px  1px 0 #a855f7,
+                         0px  0px 12px rgba(236,72,153,.35);
+                    ">
+                    SUCITRACK
+                </h1>
 
-                <x-button class="ms-4">
-                    {{ __('Register') }}
-                </x-button>
+                <p class="text-white/90 mt-3 text-sm tracking-wide">
+                    Menstrual & Prayer Tracking System
+                </p>
+
             </div>
-        </form>
-    </x-authentication-card>
+
+            <div class="p-8">
+
+                <x-validation-errors class="mb-4" />
+
+                <form method="POST" action="{{ route('register') }}">
+                    @csrf
+
+                    <!-- Name -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            Full Name
+                        </label>
+
+                        <input
+                            type="text"
+                            name="name"
+                            value="{{ old('name') }}"
+                            required
+                            autofocus
+                            autocomplete="name"
+                            placeholder="Enter your full name"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500">
+                    </div>
+
+                    <!-- Email -->
+                    <div class="mt-5">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            Email Address
+                        </label>
+
+                        <input
+                            type="email"
+                            name="email"
+                            value="{{ old('email') }}"
+                            required
+                            autocomplete="username"
+                            placeholder="example@email.com"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500">
+                    </div>
+
+                    <!-- Password -->
+                    <div class="mt-5">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            Password
+                        </label>
+
+                        <input
+                            type="password"
+                            name="password"
+                            required
+                            autocomplete="new-password"
+                            placeholder="Create password"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500">
+                    </div>
+
+                    <!-- Confirm Password -->
+                    <div class="mt-5">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            Confirm Password
+                        </label>
+
+                        <input
+                            type="password"
+                            name="password_confirmation"
+                            required
+                            autocomplete="new-password"
+                            placeholder="Confirm password"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500">
+                    </div>
+
+                    <!-- Register Button -->
+                    <button
+                        type="submit"
+                        class="w-full mt-6 bg-gradient-to-r from-pink-300 to-purple-300 hover:from-pink-400 hover:to-purple-400 text-gray-800 font-bold text-lg py-3 rounded-xl shadow-md transition duration-300">
+                        Create Account
+                    </button>
+
+                    <!-- Login -->
+                    <div class="mt-6 text-center">
+                        <p class="text-gray-500">
+                            Already have an account?
+
+                            <a href="{{ route('login') }}"
+                               class="font-semibold text-pink-500 hover:text-purple-500">
+                                Login
+                            </a>
+                        </p>
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
 </x-guest-layout>
