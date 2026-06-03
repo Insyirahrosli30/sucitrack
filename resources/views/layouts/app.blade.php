@@ -14,26 +14,34 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
-            @include('layouts.navigation')
 
-            <!-- Page Heading -->
+    <body class="font-sans antialiased bg-gray-100">
+
+        <div class="min-h-screen flex flex-col">
+
+            <!-- NAVIGATION -->
+            <header class="bg-white shadow">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    @include('layouts.navigation')
+                </div>
+            </header>
+
+            <!-- PAGE HEADER -->
             @if (isset($header))
-                <header class="bg-white shadow">
+                <header class="bg-white border-b">
                     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                         {{ $header }}
                     </div>
                 </header>
             @endif
 
-            <!-- Page Content -->
-            <main>
+            <!-- PAGE CONTENT -->
+            <main class="flex-1">
                 {{ $slot }}
             </main>
 
             <!-- FOOTER -->
-            <footer class="bg-white border-t mt-10">
+            <footer class="bg-white border-t mt-auto">
                 <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between text-sm text-gray-500">
                     <div>
                         © {{ date('Y') }} SuciTrack
@@ -46,5 +54,6 @@
             </footer>
 
         </div>
+
     </body>
 </html>

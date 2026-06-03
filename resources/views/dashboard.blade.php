@@ -27,7 +27,7 @@
             </div>
 
             <!-- QUICK INFO CARDS -->
-            <div class="grid grid-cols-2 gap-4 mb-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
 
                 <div class="bg-white p-4 rounded-lg shadow">
                     <p class="text-sm text-gray-500">Status</p>
@@ -51,7 +51,7 @@
                         SuciTrack Overview
                     </h3>
 
-                    <p class="text-sm text-gray-600 mb-4">
+                    <p class="text-sm text-gray-600">
                         This section displays menstrual tracking data and prayer time integration.
                     </p>
 
@@ -59,53 +59,69 @@
             </div>
 
             <!-- PRAYER CARD -->
-            <div class="bg-white rounded-lg shadow p-5">
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
 
-                <div class="flex justify-between items-center mb-4">
-                    <h4 class="font-semibold text-gray-800">
-                        Prayer Times Today
+                <!-- Header -->
+                <div class="mb-4">
+                    <h4 class="text-lg font-semibold text-gray-800">
+                        Prayer Times
                     </h4>
-
-                    <span class="text-xs text-gray-500">
+                    <p class="text-sm text-gray-500">
                         Rawang, Selangor
-                    </span>
+                    </p>
                 </div>
 
-                @if(isset($prayer))
+                @if(!empty($prayer))
 
-                    <div class="grid grid-cols-2 gap-4 text-sm text-gray-700">
+                    <!-- Next prayer badge -->
+                    <div class="mb-5">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium 
+                            bg-pink-50 text-pink-600 border border-pink-100">
+                            Next: {{ $labels[$nextPrayer] }}
+                        </span>
+                    </div>
 
-                        <div class="flex justify-between border-b pb-2">
-                            <span>Subuh</span>
-                            <span class="font-medium">{{ $prayer['fajr'] ?? '-' }}</span>
+                    <!-- List -->
+                    <div class="space-y-2">
+
+                        <div class="flex justify-between items-center p-3 rounded-xl
+                            {{ $nextPrayer === 'Fajr' ? 'bg-pink-50 border border-pink-100' : 'bg-gray-50' }}">
+                            <span class="text-gray-700">{{ $labels['Fajr'] }}</span>
+                            <span class="font-medium text-gray-900">{{ $prayer['Fajr'] }}</span>
                         </div>
 
-                        <div class="flex justify-between border-b pb-2">
-                            <span>Zohor</span>
-                            <span class="font-medium">{{ $prayer['dhuhr'] ?? '-' }}</span>
+                        <div class="flex justify-between items-center p-3 rounded-xl
+                            {{ $nextPrayer === 'Dhuhr' ? 'bg-pink-50 border border-pink-100' : 'bg-gray-50' }}">
+                            <span class="text-gray-700">{{ $labels['Dhuhr'] }}</span>
+                            <span class="font-medium text-gray-900">{{ $prayer['Dhuhr'] }}</span>
                         </div>
 
-                        <div class="flex justify-between border-b pb-2">
-                            <span>Asar</span>
-                            <span class="font-medium">{{ $prayer['asr'] ?? '-' }}</span>
+                        <div class="flex justify-between items-center p-3 rounded-xl
+                            {{ $nextPrayer === 'Asr' ? 'bg-pink-50 border border-pink-100' : 'bg-gray-50' }}">
+                            <span class="text-gray-700">{{ $labels['Asr'] }}</span>
+                            <span class="font-medium text-gray-900">{{ $prayer['Asr'] }}</span>
                         </div>
 
-                        <div class="flex justify-between border-b pb-2">
-                            <span>Maghrib</span>
-                            <span class="font-medium">{{ $prayer['maghrib'] ?? '-' }}</span>
+                        <div class="flex justify-between items-center p-3 rounded-xl
+                            {{ $nextPrayer === 'Maghrib' ? 'bg-pink-50 border border-pink-100' : 'bg-gray-50' }}">
+                            <span class="text-gray-700">{{ $labels['Maghrib'] }}</span>
+                            <span class="font-medium text-gray-900">{{ $prayer['Maghrib'] }}</span>
                         </div>
 
-                        <div class="flex justify-between">
-                            <span>Isyak</span>
-                            <span class="font-medium">{{ $prayer['isha'] ?? '-' }}</span>
+                        <div class="flex justify-between items-center p-3 rounded-xl
+                            {{ $nextPrayer === 'Isha' ? 'bg-pink-50 border border-pink-100' : 'bg-gray-50' }}">
+                            <span class="text-gray-700">{{ $labels['Isha'] }}</span>
+                            <span class="font-medium text-gray-900">{{ $prayer['Isha'] }}</span>
                         </div>
 
                     </div>
 
                 @else
-                    <p class="text-red-500 text-sm">
-                        Prayer data unavailable. Please refresh later.
-                    </p>
+
+                    <div class="text-sm text-gray-500">
+                        Loading prayer data. Please refresh later.
+                    </div>
+
                 @endif
 
             </div>
