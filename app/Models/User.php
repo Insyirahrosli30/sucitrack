@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\MenstrualRecord;
+use App\Models\Reminder;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -64,5 +65,10 @@ class User extends Authenticatable
     public function menstrualRecords()
     {
     return $this->hasMany(MenstrualRecord::class);
+    }
+
+    public function reminders()
+    {
+    return $this->hasMany(Reminder::class);
     }
 }
