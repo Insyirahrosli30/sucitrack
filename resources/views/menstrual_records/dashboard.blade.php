@@ -37,6 +37,15 @@
                 <a href="#" class="text-stone-400 hover:text-stone-800 transition px-1 py-5">
                    Qada' List
                 </a>
+
+                <form method="POST" action="{{ route('logout') }}" class="inline">
+                @csrf
+                <button type="submit"
+                class="text-stone-400 hover:text-red-500 transition px-1 py-5">
+                    Logout
+                </button>
+                </form>
+
             </div>
 
         </div>
