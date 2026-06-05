@@ -27,6 +27,9 @@ return new class extends Migration
     $table->integer('duration_days')
           ->nullable();
 
+    $table->string('zone_code')->default('SGR01'); // Default to Gombak/Shah Alam
+    $table->boolean('qada_calculated')->default(false);
+
     $table->timestamps();
 });
     }
@@ -36,6 +39,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('menstrual_records');
+        Schema::dropIfExists('MenstrualRecords');
     }
 };
