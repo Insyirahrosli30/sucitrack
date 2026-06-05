@@ -61,8 +61,15 @@ class MenstrualController extends Controller
      */
     public function edit(string $id)
     {
-        $record = menstrual_records::where('user_id', auth()->id())->findOrFail($id);
-        return view('menstrual_records.edit', compact('record'));
+        // Find the record belonging to this user
+    $record = MenstrualRecord::where('user_id', auth()->id())->find($id);
+    
+    // If no active record exists for this ID, redirect to dashboard with a helper message
+     if (!$record) {
+        return redirect()->route('dashboard')->with('info', 'No active cycle found to end. Please start a period first!');
+    }
+    
+        return view('edit', compact('record'));
     }
 
     /**
@@ -70,45 +77,19 @@ class MenstrualController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $record = menstrual_records::where('user_id', auth()->id())->findOrFail($id);
+      
+    $record = MenstrualRecord::where('user_id', auth()->id())->findOrFail($id);
 
-        $request->validate([
-            'started_at' => 'required|date',
-            'ended_at'   => 'nullable|date|after:started_at|before_or_equal:now',
-        ]);
+    $request->validate([
+        'end_datetime' => 'required|date|before_or_equal:now',
+    ]);
 
-        $record->started_at = Carbon::parse($request->started_at);
-        
-        // Execute dynamic API lookup if ending cycle
-        if ($request->filled('ended_at')) {
-            $endTime = Carbon::parse($request->ended_at);
-            $record->ended_at = $endTime;
+    $record->update([
+        'end_datetime' => $request->end_datetime,
+    ]);
 
-            $prayerTimes = $this->fetchJakimPrayerTimes($record->zone_code, $endTime->toDateString());
-            
-            if ($prayerTimes) {
-                $parsedTimes = $this->parsePrayerTimestamps($endTime->toDateString(), $prayerTimes);
-                $evaluation = $this->evaluateQadaRequirements($endTime, $parsedTimes);
-
-                // Commit outstanding requirements to Qada logs table
-                foreach ($evaluation['prayers_to_perform'] as $prayer) {
-                    QadaLog::firstOrCreate([
-                        'user_id'            => auth()->id(),
-                        'menstrual_record_id'=> $record->id, // Adjusted matching key
-                        'prayer_name'        => $prayer,
-                        'is_completed'       => false,
-                        'missed_date'        => $endTime->toDateString()
-                    ]);
-                }
-                $record->qada_calculated = true;
-                session()->flash('evaluation', $evaluation);
-            }
-        }
-
-        $record->save();
-
-        return redirect()->route('menstrual_records.index')->with('status', 'Record updated successfully.');
-    }
+    return redirect()->route('dashboard')->with('success', 'Period end logged successfully. You are now clean!');
+   }
 
     /**
      * Remove the specified resource from storage.

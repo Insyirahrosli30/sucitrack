@@ -4,8 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\User;
-
 
 class MenstrualRecord extends Model
 {
@@ -21,4 +19,5 @@ class MenstrualRecord extends Model
     {
         return $this->belongsTo(User::class);
     }
+
 }

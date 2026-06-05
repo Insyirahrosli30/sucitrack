@@ -24,29 +24,21 @@
                 <span class="font-bold text-base tracking-tight text-stone-800">SuciTrack</span>
             </div>
             
-            <!-- Navigation Links -->
-            <div class="flex items-center space-x-6 text-sm font-medium">
-                <a href="{{ route('menstrual_records.index') }}" 
-                   class="text-stone-400 hover:text-stone-800 transition px-1 py-5">
-                   History & Records
-                </a>
-                <a href="{{ route('dashboard') }}" 
-                   class="text-stone-800 border-b-2 border-stone-800 px-1 py-5 transition">
-                   Dashboard
-                </a>
-                <a href="#" class="text-stone-400 hover:text-stone-800 transition px-1 py-5">
-                   Qada' List
-                </a>
-
-                <form method="POST" action="{{ route('logout') }}" class="inline">
-                @csrf
-                <button type="submit"
-                class="text-stone-400 hover:text-red-500 transition px-1 py-5">
-                    Logout
-                </button>
-                </form>
-
-            </div>
+           <!-- Navigation Links Wrapper -->
+<div class="flex items-center space-x-6 text-sm font-medium">
+    <a href="{{ route('menstrual_records.index') }}" 
+       class="text-stone-400 hover:text-stone-800 transition px-1 py-5">
+       History & Records
+    </a>
+    <a href="{{ route('dashboard') }}" 
+       class="text-stone-800 border-b-2 border-stone-800 px-1 py-5 transition">
+       Dashboard
+    </a>
+    <a href="{{ route('qada.index') }}" 
+       class="text-stone-400 hover:text-stone-800 transition px-1 py-5">
+       Qada' List
+    </a>
+</div>
 
         </div>
     </nav>
@@ -110,19 +102,24 @@
                     <h2 class="text-lg font-semibold text-stone-800">Track Current Status</h2>
                     <p class="text-sm text-stone-400 mt-1 mb-6">Instantly register boundaries to automate local calculations.</p>
                     
-                    <div class="flex flex-col sm:flex-row gap-4">
-                        <a href="{{ route('menstrual_records.create') }}" class="flex-1 inline-flex items-center justify-center px-5 py-4 border border-stone-200 rounded-xl text-sm font-medium text-stone-700 bg-white hover:bg-stone-50 transition duration-150">
-                            <span class="w-2 h-2 rounded-full bg-rose-400 mr-3 animate-pulse"></span>
-                            Log Period Start
-                        </a>
+                <div class="flex flex-col sm:flex-row gap-4">
+    <!-- Log Period Start Button -->
+    
+    <div class="flex flex-col sm:flex-row gap-4">
+        <a href="{{ route('menstrual_records.create') }}" class="flex-1 inline-flex items-center justify-center px-5 py-4 border border-stone-200 rounded-xl text-sm font-medium text-stone-700 bg-white hover:bg-stone-50 transition duration-150">
+        <span class="w-2 h-2 rounded-full bg-rose-400 mr-3 animate-pulse"></span>
+        Log Period Start
+        </a>
 
-                        <a href="#" class="flex-1 inline-flex items-center justify-center px-5 py-4 rounded-xl text-sm font-medium text-white bg-stone-900 hover:bg-stone-800 transition duration-150 shadow-sm">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                            Log Period End (Purified)
-                        </a>
-                    </div>
-                </div>
-            </div>
+     <a href="{{ $activeRecord ? route('menstrual_records.edit', $activeRecord->id) : route('menstrual_records.index') }}" class="flex-1 inline-flex items-center justify-center px-5 py-4 rounded-xl text-sm font-medium text-white bg-stone-900 hover:bg-stone-800 transition duration-150 shadow-sm">
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+        Log Period End (Purified)
+    </a>
+</div>
+   
+        </div>
+    </div>
+</div>
 
             <!-- Configuration Info Box Sidebar -->
             <div class="space-y-6">
