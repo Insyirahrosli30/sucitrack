@@ -2,19 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 
-
-class MenstrualRecord extends Model
+class Reminder extends Model
 {
-    use HasFactory;
     protected $fillable = [
         'user_id',
-        'start_datetime',
-        'end_datetime',
-        'duration_days'
+        'title',
+        'message',
+        'is_read'
     ];
 
     public function user()
