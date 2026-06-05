@@ -1,33 +1,33 @@
 <?php
+
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\PrayerController;
+use App\Http\Controllers\MenstrualController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
-Route::get('/', fn () => view('welcome'));
-
-// 1. PLACE THE CALENDAR ROUTE HERE (OUTSIDE AUTH MIDDLEWARE)
-Route::get('/calendar', fn () => view('calendar'))->name('calendar');
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
-
-Route::get('/dashboard', [PrayerController::class, 'index'])
-    ->middleware(['auth'])
-    ->name('dashboard');
+Route::get('/', function () {
+    return redirect()->route('dashboard');
+});
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', fn () => view('dashboard'))->name('dashboard');
+    // Dashboard Route targeting your Controller core logic
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
+    // Calendar Route (Queries database rows before returning the view)
+    Route::get('/calendar', function () {
+        $records = \App\Models\MenstrualRecords::where('user_id', Auth::id())
+            ->get(['start_datetime as start', 'end_datetime as end']);
+        return view('calendar', compact('records'));
+    })->name('calendar');
+
+    // Menstrual History Resources Mapping
+    Route::resource('menstrual_records', MenstrualController::class);
+    
+    // Profile Management Routing
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update']);
-    Route::delete('/profile', [ProfileController::class, 'destroy']);
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 require __DIR__.'/auth.php';

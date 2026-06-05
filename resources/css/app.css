@@ -5,3 +5,32 @@
 [x-cloak] {
     display: none;
 }
+
+/* CUSTOM COMPONENT CALENDAR STYLING */
+.calendar-day-box {
+    min-height: 80px;
+    padding: 6px;
+    border: 1px solid #f3f3f2;
+    border-radius: 12px;
+    background-color: #ffffff;
+    transition: background-color 0.15s ease;
+}
+
+.calendar-day-box.period-day {
+    background-color: #fff1f2 !important;
+    border-color: #fecdd3 !important;
+    color: #be123c !important;
+    font-weight: 600;
+}
+
+.calendar-day-box.predicted-day {
+    background-color: #fef2f2 !important;
+    border-color: #fee2e2 !important;
+    border-style: dashed !important;
+    color: #991b1b !important;
+}
+
+.calendar-day-box.other-month {
+    color: #d1d5db;
+    background-color: #f9fafb;
+}
