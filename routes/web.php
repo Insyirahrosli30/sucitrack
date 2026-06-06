@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PrayerController;
 use App\Http\Controllers\MenstrualController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\QadaController;
@@ -14,6 +15,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Main Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
+
+    Route::get('/dashboard', [PrayerController::class, 'index'])->name('dashboard');
 
     // Menstrual Records CRUD System
     Route::resource('menstrual_records', MenstrualController::class);

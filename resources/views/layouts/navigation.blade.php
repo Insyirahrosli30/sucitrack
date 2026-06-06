@@ -1,42 +1,28 @@
-<nav class="flex items-center justify-between w-full text-sm font-medium text-gray-700">
+<nav class="bg-pink-100 border-b border-pink-200">
+    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
 
-    <!-- LEFT BRAND -->
-    <div class="font-semibold text-pink-700 text-lg">
-        SuciTrack
-    </div>
-
-    <!-- CENTER LINKS -->
-    <div class="flex items-center gap-6">
-
-        <a href="{{ url('/menstrual_records') }}"
-           class="hover:text-pink-700 transition">
+        <div class="font-bold text-pink-700">
             SuciTrack
-        </a>
+        </div>
 
-        <a href="{{ route('dashboard') }}"
-           class="hover:text-pink-700 transition">
-            Dashboard
-        </a>
+        <div class="flex gap-6 text-sm">
 
-        <a href="{{ url('/history') }}"
-           class="hover:text-pink-700 transition">
-            History & Records
-        </a>
+            <a href="{{ route('dashboard') }}"
+               class="{{ request()->is('dashboard') ? 'text-pink-700 font-semibold' : 'text-gray-500 hover:text-pink-700' }}">
+                Dashboard
+            </a>
 
-        <a href="{{ url('/qada') }}"
-           class="hover:text-pink-700 transition">
-            Qada' List
-        </a>
+            <a href="{{ route('menstrual_records.index') }}"
+               class="{{ request()->is('menstrual_records*') ? 'text-pink-700 font-semibold' : 'text-gray-500 hover:text-pink-700' }}">
+                History & Records
+            </a>
+
+            <a href="{{ route('qada.index') }}"
+               class="{{ request()->is('qada*') ? 'text-pink-700 font-semibold' : 'text-gray-500 hover:text-pink-700' }}">
+                Qada' List
+            </a>
+
+        </div>
 
     </div>
-
-    <!-- RIGHT SIDE (keep auth system working) -->
-    <div>
-        @auth
-            <span class="text-gray-500 text-xs">
-                {{ Auth::user()->name }}
-            </span>
-        @endauth
-    </div>
-
 </nav>

@@ -55,6 +55,6 @@ class PrayerController extends Controller
             'Isha' => 'Isyak',
         ];
 
-        return view('dashboard', compact('prayer', 'nextPrayer', 'labels'));
+        return view('menstrual_records.dashboard', compact('prayer', 'nextPrayer', 'labels'));
     }
 }
