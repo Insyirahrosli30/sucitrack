@@ -1,52 +1,132 @@
 <x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
-        @csrf
+    <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-50 via-white to-purple-50 px-4 py-10">
 
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
-        </div>
+        <div class="w-full max-w-md bg-white/90 backdrop-blur-md shadow-2xl rounded-3xl border border-white/50 overflow-hidden">
 
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-pink-300 via-pink-200 to-purple-300 p-8 text-center">
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+                <div class="text-5xl mb-2">
+                    🌙
+                </div>
 
-            <x-text-input id="password" class="block mt-1 w-full"
+                <h1
+                    style="
+                    font-family:'Cinzel', serif;
+                    font-size:50px;
+                    letter-spacing:2px;
+                    font-weight:700;
+                    color:white;
+                    text-shadow:
+                        -1px -1px 0 #ec4899,
+                         1px -1px 0 #ec4899,
+                        -1px  1px 0 #a855f7,
+                         1px  1px 0 #a855f7,
+                         0px  0px 12px rgba(236,72,153,.35);
+                    ">
+                    SUCITRACK
+                </h1>
+
+                <p class="text-white/90 mt-3 text-sm tracking-wide">
+                    Menstrual & Prayer Tracking System
+                </p>
+
+            </div>
+
+            <div class="p-8">
+
+                <x-validation-errors class="mb-4" />
+
+                <form method="POST" action="{{ route('register') }}">
+                    @csrf
+
+                    <!-- Name -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            Full Name
+                        </label>
+
+                        <input
+                            type="text"
+                            name="name"
+                            value="{{ old('name') }}"
+                            required
+                            autofocus
+                            autocomplete="name"
+                            placeholder="Enter your full name"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500">
+                    </div>
+
+                    <!-- Email -->
+                    <div class="mt-5">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            Email Address
+                        </label>
+
+                        <input
+                            type="email"
+                            name="email"
+                            value="{{ old('email') }}"
+                            required
+                            autocomplete="username"
+                            placeholder="example@email.com"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500">
+                    </div>
+
+                    <!-- Password -->
+                    <div class="mt-5">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            Password
+                        </label>
+
+                        <input
                             type="password"
                             name="password"
-                            required autocomplete="new-password" />
+                            required
+                            autocomplete="new-password"
+                            placeholder="Create password"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500">
+                    </div>
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
+                    <!-- Confirm Password -->
+                    <div class="mt-5">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            Confirm Password
+                        </label>
 
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
+                        <input
                             type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
+                            name="password_confirmation"
+                            required
+                            autocomplete="new-password"
+                            placeholder="Confirm password"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500">
+                    </div>
 
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+                    <!-- Register Button -->
+                    <button
+                        type="submit"
+                        class="w-full mt-6 bg-gradient-to-r from-pink-300 to-purple-300 hover:from-pink-400 hover:to-purple-400 text-gray-800 font-bold text-lg py-3 rounded-xl shadow-md transition duration-300">
+                        Create Account
+                    </button>
+
+                    <!-- Login -->
+                    <div class="mt-6 text-center">
+                        <p class="text-gray-500">
+                            Already have an account?
+
+                            <a href="{{ route('login') }}"
+                               class="font-semibold text-pink-500 hover:text-purple-500">
+                                Login
+                            </a>
+                        </p>
+                    </div>
+
+                </form>
+
+            </div>
+
         </div>
 
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
-
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
-        </div>
-    </form>
+    </div>
 </x-guest-layout>
