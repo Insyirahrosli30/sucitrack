@@ -84,9 +84,16 @@ The application is built around four primary functional pillars:
 - Historical trends, predictive modeling for future cycles to inform users.
 
 ### 3.2 Technical
-Backend Framework: Laravel (PHP), JavaScript
-Frontend Interface: Blade Templating Engine, Tailwind CSS (augmented with Livewire for real-time reactivity)
-Database: MySQL
+Backend Framework: 
+- Laravel (PHP)
+- JavaScript
+
+Frontend Interface: 
+- Blade Templating Engine, 
+- Tailwind CSS (augmented with Livewire for real-time reactivity)
+
+Database: 
+- MySQL
 
 ## 4. Features & Functionalities
 
@@ -111,7 +118,7 @@ SuciTrack allows users to manage menstrual cycle records through a complete Crea
 - Edit existing records
 - Delete records
 - Store cycle duration information
-- Track purity periods (Hari Suci)
+- Track purity periods (Tuhr)
 
 ### 4.3 Prayer Time Integration
 The system integrates with JAKIM Prayer Time API to retrieve accurate prayer schedules based on selected zones. This ensures that prayer-related calculations are aligned with official Malaysian prayer times.
@@ -158,7 +165,7 @@ This application is designed using Tailwind CSS and Blade templates to provide a
 ## 5. Entity Relationship Diagram (ERD)
 
 <p align="center">
-    <img src="public/images/ERD_SuciTrack.png" width="700">
+    <img src="public/images/ERD_SuciTrack.png" width="450">
 </p>
 
 <p align="center">
@@ -171,7 +178,7 @@ A one-to-many relationship exists between the tables, where one user can create 
 ## 6. Sequence Diagram
 
 <p align="center">
-    <img src="public/images/SequenceDiagram.png" width="900">
+    <img src="public/images/SequenceDiagram.png" width="750">
 </p>
 
 <p align="center">
