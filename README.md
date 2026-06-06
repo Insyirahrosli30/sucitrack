@@ -20,14 +20,16 @@ Putri Nur Batrisyia binti Azizul (2412444)
 * Create ERD
 * Setup MySQL database
 * Create Laravel migrations
-* Create models
+* Create Eloquent Models
 * Setup foreign keys and relationships
+* Design landing page/homepage
 * Design login page
 * Design register page
 * Create authentication forms
-* Style input forms
+* Style input forms using Tailwind CSS
 * Connect forms with backend routes
 * Connect Laravel with JAKIM API
+* Implement responsive layout for multiple pages
   
 Wan Nur Hanees binti Wan Shukri (2415978)
 * Create CRUD backend functions
@@ -55,13 +57,13 @@ Wan Nur Insyirah binti Wan Rosli (2410848)
 * Determine qada’ prayer needed
 * Test calculation accuracy
 
-**1. Introduction**
+## 1. Introduction
 
 SuciTrack is a specialized, Laravel-based web application cater assist Muslim women in tracking their menstrual cycles (Hayd) and periods of purity (Tuhr) in strict accordance with Shariah (Islamic jurisprudence) guidelines.
 
 Navigating the complexities of Islamic rulings regarding prayer (Salah), fasting (Sawm), and other acts of worship during and after menstruation can be challenging. SuciTrack addresses this by replacing manual calculations with an automated, reliable digital solution. By combining the robust Model-View-Controller (MVC) architecture of Laravel with precise jurisprudential logic, the platform empowers users to maintain the five daily prayers and accurately manage their religious obligations.
 
-**2. Problem Statement & Objectives**
+## 2. Problem Statement & Objectives
 
 2.1 Problem Statement
 Many contemporary period tracking applications are designed purely from a medical or lifestyle perspective. They lack the specific logical parameters required to determine Islamic purity, such as tracking the exact duration of a valid period, identifying irregular bleeding (Istihadah), or calculating missed prayers that require replacement (Qada'). This leaves users to manually calculate their end period time, often leading to confusion regarding their validation for acts of worship.
@@ -71,7 +73,7 @@ Many contemporary period tracking applications are designed purely from a medica
 - Eliminate manual calculation errors by automating the determination of purity days, valid menstruation limits, and transitional phases.
 - Support users in fulfilling their religious duties by implementing a structured system to track and clear Qada' (missed) prayers.
 
-**3. System Architecture & Features**
+## 3. System Architecture
 
 3.1 Core Features
 The application is built around four primary functional pillars:
@@ -85,6 +87,91 @@ Backend Framework: Laravel (PHP), JavaScript
 Frontend Interface: Blade Templating Engine, Tailwind CSS (augmented with Livewire for real-time reactivity)
 Database: MySQL
 
+## 4. Features & Functionalities
 
+4.1 User Authentication
 
+The system provides a secure authentication mechanism that allows users to create accounts, log in and access their personal menstrual tracking data. Authentication is implemented using Laravel's built-in authentication system to ensure user privacy and data security.
 
+Functions:
+
+- User registration
+- User login
+- User logout
+- Session management
+- User data protection
+
+4.2 Menstrual Records Management
+
+SuciTrack allows users to manage menstrual cycle records through a complete Create, Read, Update and Delete (CRUD) system. Users can record the start and end dates of their menstrual periods, enabling the system to calculate cycle-related information automatically.
+
+Functions:
+
+- Add new menstrual records
+- View menstrual history
+- Edit existing records
+- Delete records
+- Store cycle duration information
+- Track purity periods (Hari Suci)
+
+4.3 Prayer Time Integration
+
+The system integrates with JAKIM Prayer Time API to retrieve accurate prayer schedules based on selected zones. This ensures that prayer-related calculations are aligned with official Malaysian prayer times.
+
+Functions:
+
+- Retrieve prayer times from JAKIM API
+- Display daily prayer schedule
+- Support prayer zone selection
+- Update prayer information dynamically
+
+4.4 Dashboard 
+
+A centralized dashboard provides users with an overview of their menstrual status and related information. Important cycle information is displayed in organized and user-friendly interface.
+
+Functions:
+
+- Display current menstrual status
+- Display recorded cycle information
+- Display history of menstrual records
+- Predict next menstrual cycle
+- Show prayer-related information
+- Quick access to system features and modules
+
+5. Qada' Prayer Tracking
+
+Qada' module assists users in identifying prayers that may need to be replaced due to menstrual periods. The system supports the management and monitoring of qada' prayer records.
+
+Functions:
+
+- Record qada' prayer information
+- Manage qada' prayer records
+- Display qada' prayer status
+
+6. Responsive User Interface
+
+This application is designed using Tailwind CSS and Blade templates to provide a clean and responsive user experience across different devices.
+
+Functions:
+
+- Responsive page layout
+- Modern user interface
+- Consistent navigation design
+- Mobile-friendly display
+- Interactive forms and components
+
+## 5. Entity Relationship Diagram (ERD)
+
+<p align="center">
+  <img src="public/images/ERDSuciTrack.png" width="700">
+</p>
+
+## 6. Sequence Diagram
+
+## 7. User Interface (Completed System)
+
+## 8. Implementation Details
+
+## 9. Recommendations
+
+## 10. Conclusion
