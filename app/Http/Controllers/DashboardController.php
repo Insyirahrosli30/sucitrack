@@ -2,93 +2,147 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
 use App\Models\MenstrualRecords;
 use App\Models\QadaLog;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
-    /**
-     * Display the main integrated tracking dashboard.
-     */
     public function index()
     {
         $userId = Auth::id();
 
-        // 1. Get active ongoing period entry
-        $activeRecord = MenstrualRecords::where('user_id', $userId)
-            ->whereNull('end_datetime')
+        // ------------------------------------------------------------
+        // LOGIK A: MENGIRA HARI SUCI (DAYS OF PURITY) KRONOLOGI BETUL
+        // ------------------------------------------------------------
+        $latestRecords = MenstrualRecords::where('user_id', $userId)
             ->orderBy('start_datetime', 'desc')
-            ->first();
+            ->take(2)
+            ->get();
 
-        // 2. Count purity days
         $daysOfPurity = 0;
         $isClean = true;
 
-        if ($activeRecord) {
-            $isClean = false;
-        } else {
-            $lastEndedRecord = MenstrualRecords::where('user_id', $userId)
-                ->whereNotNull('end_datetime')
-                ->orderBy('end_datetime', 'desc')
-                ->first();
+        if ($latestRecords->count() > 0) {
+            $currentRecord = $latestRecords->first();
 
-            if ($lastEndedRecord) {
-                $daysOfPurity = now()->diffInDays(Carbon::parse($lastEndedRecord->end_datetime));
+            // Jika rekod terbaharu tiada end_datetime, maksudnya user sedang haid sekarang
+            if (is_null($currentRecord->end_datetime)) {
+                $isClean = false;
+                $daysOfPurity = 0; 
+            } else {
+                // Sempurna: Kira jarak antara kitaran (Start Baru - End Lama)
+                if ($latestRecords->count() == 2) {
+                    $previousRecord = $latestRecords->skip(1)->first();
+                    
+                    $startOfNewPeriod = Carbon::parse($currentRecord->start_datetime);
+                    $endOfLastPeriod  = Carbon::parse($previousRecord->end_datetime);
+                    
+                    $daysOfPurity = (int) $endOfLastPeriod->diffInDays($startOfNewPeriod);
+                } else {
+                    // Fallback: Jika baru ada 1 rekod sahaja dalam sistem, kira dari tarikh tamat hingga sekarang
+                    $endOfPeriod = Carbon::parse($currentRecord->end_datetime);
+                    $daysOfPurity = (int) $endOfPeriod->diffInDays(now());
+                }
             }
         }
 
-        // 3. Outstanding Qada obligations counter
-        $pendingQadaCount = QadaLog::where('user_id', $userId)
-            ->where('is_completed', false)
-            ->count();
+        // ------------------------------------------------------------
+        // LOGIK B: KIRAAN TEORITIKAL FIQH DI KOTAK KIRI (SUMMARY)
+        // ------------------------------------------------------------
+        $calculatedFajrCount = 0;
+        $calculatedZuhrCount = 0;
+        $calculatedAsrCount = 0;
+        $calculatedMaghribCount = 0;
+        $calculatedIshaCount = 0;
 
-        // 4. Gather ALL historic rows as a clean collection array to send to JS
-       // New Line 43 
-$allRecords = MenstrualRecords::where('user_id', $userId)
-    ->get(['start_datetime as start', 'end_datetime as end', 'start_datetime', 'end_datetime']);
-
-        // 5. API Prayer Timings Fetch (Rawang / Malaysia default setup)
         $prayer = [
             'Fajr' => '05:41', 'Dhuhr' => '13:12', 'Asr' => '16:38', 'Maghrib' => '19:24', 'Isha' => '20:39'
         ];
-        $nextPrayer = 'Fajr';
 
-        try {
-            $response = Http::timeout(3)->get('https://api.aladhan.com/v1/timingsByCity', [
-                'city' => 'Rawang',
-                'country' => 'Malaysia',
-                'method' => 2
-            ]);
+        $allRecords = MenstrualRecords::where('user_id', $userId)->get();
 
-            if ($response->successful()) {
-                $timings = $response->json()['data']['timings'];
-                $prayer = [
-                    'Fajr'    => $timings['Fajr'],
-                    'Dhuhr'   => $timings['Dhuhr'],
-                    'Asr'     => $timings['Asr'],
-                    'Maghrib' => $timings['Maghrib'],
-                    'Isha'    => $timings['Isha'],
-                ];
+        foreach ($allRecords as $record) {
+            if (!$record->end_datetime) {
+                continue;
             }
-        } catch (\Exception $e) {
-            // Reverts safely if network times out
+
+            $start = Carbon::parse($record->start_datetime);
+            $end = Carbon::parse($record->end_datetime);
+
+            // Semakan waktu mula haid
+            $fajrStart    = Carbon::parse($start->format('Y-m-d') . ' ' . $prayer['Fajr']);
+            $dhuhrStart   = Carbon::parse($start->format('Y-m-d') . ' ' . $prayer['Dhuhr']);
+            $asrStart     = Carbon::parse($start->format('Y-m-d') . ' ' . $prayer['Asr']);
+            $maghribStart = Carbon::parse($start->format('Y-m-d') . ' ' . $prayer['Maghrib']);
+            $ishaStart    = Carbon::parse($start->format('Y-m-d') . ' ' . $prayer['Isha']);
+
+            if ($start->between($fajrStart, $dhuhrStart)) {
+                $calculatedFajrCount++;
+            } elseif ($start->between($dhuhrStart, $asrStart)) {
+                $calculatedZuhrCount++;
+            } elseif ($start->between($asrStart, $maghribStart)) {
+                $calculatedAsrCount++;
+            } elseif ($start->between($maghribStart, $ishaStart)) {
+                $calculatedMaghribCount++;
+            } else {
+                $calculatedIshaCount++;
+            }
+
+            // Semakan waktu tamat haid (Kebolehan Jamak Shafi'i)
+            $fajrEnd    = Carbon::parse($end->format('Y-m-d') . ' ' . $prayer['Fajr']);
+            $dhuhrEnd   = Carbon::parse($end->format('Y-m-d') . ' ' . $prayer['Dhuhr']);
+            $asrEnd     = Carbon::parse($end->format('Y-m-d') . ' ' . $prayer['Asr']);
+            $maghribEnd = Carbon::parse($end->format('Y-m-d') . ' ' . $prayer['Maghrib']);
+            $ishaEnd    = Carbon::parse($end->format('Y-m-d') . ' ' . $prayer['Isha']);
+
+            if ($end->between($fajrEnd, $dhuhrEnd)) {
+                $calculatedFajrCount++;
+            } elseif ($end->between($dhuhrEnd, $asrEnd)) {
+                $calculatedZuhrCount++;
+            } elseif ($end->between($asrEnd, $maghribEnd)) {
+                $calculatedAsrCount++;
+                $calculatedZuhrCount++; 
+            } elseif ($end->between($maghribEnd, $ishaEnd)) {
+                $calculatedMaghribCount++;
+            } else {
+                $calculatedIshaCount++;
+                $calculatedMaghribCount++; 
+            }
         }
 
-        $now = Carbon::now('Asia/Kuala_Lumpur');
-        $times = [
-            'Fajr'    => Carbon::createFromFormat('H:i', $prayer['Fajr'], 'Asia/Kuala_Lumpur'),
-            'Dhuhr'   => Carbon::createFromFormat('H:i', $prayer['Dhuhr'], 'Asia/Kuala_Lumpur'),
-            'Asr'     => Carbon::createFromFormat('H:i', $prayer['Asr'], 'Asia/Kuala_Lumpur'),
-            'Maghrib' => Carbon::createFromFormat('H:i', $prayer['Maghrib'], 'Asia/Kuala_Lumpur'),
-            'Isha'    => Carbon::createFromFormat('H:i', $prayer['Isha'], 'Asia/Kuala_Lumpur'),
-        ];
+        // ------------------------------------------------------------
+        // LOGIK C: AMBIL DATA SELESAI & TOLAK (KONSISTEN LOWERCASE)
+        // ------------------------------------------------------------
+        $completedLogs = QadaLog::where('user_id', $userId)
+            ->where('is_completed', true)
+            ->selectRaw('prayer_name, count(*) as total')
+            ->groupBy('prayer_name')
+            ->pluck('total', 'prayer_name')
+            ->toArray();
 
-        foreach ($times as $name => $time) {
-            if ($now->lt($time)) {
+        // Paksa guna lowercase key untuk menyamai standard input baru database
+        $finalFajrOwed    = max(0, $calculatedFajrCount - ($completedLogs['fajr'] ?? 0));
+        $finalZuhrOwed    = max(0, $calculatedZuhrCount - ($completedLogs['zuhr'] ?? 0));
+        $finalAsrOwed     = max(0, $calculatedAsrCount - ($completedLogs['asr'] ?? 0));
+        $finalMaghribOwed = max(0, $calculatedMaghribCount - ($completedLogs['maghrib'] ?? 0));
+        $finalIshaOwed    = max(0, $calculatedIshaCount - ($completedLogs['isha'] ?? 0));
+
+        // Ambil senarai tugasan interaktif yang belum diselesaikan (Kotak Kanan)
+        $pendingQadaItems = QadaLog::where('user_id', $userId)
+            ->where('is_completed', false)
+            ->orderBy('missed_date', 'asc')
+            ->get();
+
+        $pendingQadaCount = $pendingQadaItems->count();
+
+        // Cari waktu solat seterusnya untuk widget dashboard
+        $nextPrayer = 'Fajr';
+        $currentTime = now()->format('H:i');
+        foreach ($prayer as $name => $time) {
+            if ($currentTime < $time) {
                 $nextPrayer = $name;
                 break;
             }
@@ -98,16 +152,21 @@ $allRecords = MenstrualRecords::where('user_id', $userId)
             'Fajr' => 'Subuh', 'Dhuhr' => 'Zohor', 'Asr' => 'Asar', 'Maghrib' => 'Maghrib', 'Isha' => 'Isyak'
         ];
 
-        // Directs Laravel to locate the template within the subfolder layout
         return view('menstrual_records.dashboard', compact(
-            'activeRecord', 
-            'daysOfPurity', 
-            'isClean', 
-            'pendingQadaCount', 
-            'allRecords',
-            'prayer', 
-            'nextPrayer', 
-            'labels'
+            'daysOfPurity', 'isClean', 'pendingQadaCount', 'nextPrayer', 'prayer', 'labels',
+            'finalFajrOwed', 'finalZuhrOwed', 'finalAsrOwed', 'finalMaghribOwed', 'finalIshaOwed',
+            'pendingQadaItems', 'allRecords'
         ));
+    }
+
+    /**
+     * Menyelesaikan tugasan qada' individu apabila butang "Done" ditekan
+     */
+    public function completeQada($id)
+    {
+        $log = QadaLog::where('user_id', Auth::id())->findOrFail($id);
+        $log->update(['is_completed' => true]);
+
+        return redirect()->route('dashboard')->with('success', 'Qada prayer marked as completed!');
     }
 }

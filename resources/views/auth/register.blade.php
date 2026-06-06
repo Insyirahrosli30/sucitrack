@@ -1,132 +1,45 @@
-<x-guest-layout>
-    <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-50 via-white to-purple-50 px-4 py-10">
-
-        <div class="w-full max-w-md bg-white/90 backdrop-blur-md shadow-2xl rounded-3xl border border-white/50 overflow-hidden">
-
-            <!-- Header -->
-            <div class="bg-gradient-to-r from-pink-300 via-pink-200 to-purple-300 p-8 text-center">
-
-                <div class="text-5xl mb-2">
-                    🌙
-                </div>
-
-                <h1
-                    style="
-                    font-family:'Cinzel', serif;
-                    font-size:50px;
-                    letter-spacing:2px;
-                    font-weight:700;
-                    color:white;
-                    text-shadow:
-                        -1px -1px 0 #ec4899,
-                         1px -1px 0 #ec4899,
-                        -1px  1px 0 #a855f7,
-                         1px  1px 0 #a855f7,
-                         0px  0px 12px rgba(236,72,153,.35);
-                    ">
-                    SUCITRACK
-                </h1>
-
-                <p class="text-white/90 mt-3 text-sm tracking-wide">
-                    Menstrual & Prayer Tracking System
-                </p>
-
-            </div>
-
-            <div class="p-8">
-
-                <x-validation-errors class="mb-4" />
-
-                <form method="POST" action="{{ route('register') }}">
-                    @csrf
-
-                    <!-- Name -->
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">
-                            Full Name
-                        </label>
-
-                        <input
-                            type="text"
-                            name="name"
-                            value="{{ old('name') }}"
-                            required
-                            autofocus
-                            autocomplete="name"
-                            placeholder="Enter your full name"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500">
-                    </div>
-
-                    <!-- Email -->
-                    <div class="mt-5">
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">
-                            Email Address
-                        </label>
-
-                        <input
-                            type="email"
-                            name="email"
-                            value="{{ old('email') }}"
-                            required
-                            autocomplete="username"
-                            placeholder="example@email.com"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500">
-                    </div>
-
-                    <!-- Password -->
-                    <div class="mt-5">
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">
-                            Password
-                        </label>
-
-                        <input
-                            type="password"
-                            name="password"
-                            required
-                            autocomplete="new-password"
-                            placeholder="Create password"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500">
-                    </div>
-
-                    <!-- Confirm Password -->
-                    <div class="mt-5">
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">
-                            Confirm Password
-                        </label>
-
-                        <input
-                            type="password"
-                            name="password_confirmation"
-                            required
-                            autocomplete="new-password"
-                            placeholder="Confirm password"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500">
-                    </div>
-
-                    <!-- Register Button -->
-                    <button
-                        type="submit"
-                        class="w-full mt-6 bg-gradient-to-r from-pink-300 to-purple-300 hover:from-pink-400 hover:to-purple-400 text-gray-800 font-bold text-lg py-3 rounded-xl shadow-md transition duration-300">
-                        Create Account
-                    </button>
-
-                    <!-- Login -->
-                    <div class="mt-6 text-center">
-                        <p class="text-gray-500">
-                            Already have an account?
-
-                            <a href="{{ route('login') }}"
-                               class="font-semibold text-pink-500 hover:text-purple-500">
-                                Login
-                            </a>
-                        </p>
-                    </div>
-
-                </form>
-
-            </div>
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register — SuciTrack</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css?family=Plus+Jakarta+Sans:wght=400;500;600;700&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Plus Jakarta Sans', sans-serif; }</style>
+</head>
+<body class="bg-[#FBFBFA] min-h-screen flex items-center justify-center p-6">
+    <div class="w-full max-w-sm bg-white border border-stone-100 rounded-2xl p-8 shadow-sm">
+        <div class="flex items-center space-x-2 mb-4 justify-center">
+            <div class="w-2.5 h-2.5 rounded-full bg-rose-400"></div>
+            <span class="font-bold text-lg tracking-tight text-stone-800">SuciTrack</span>
         </div>
+        
+        <h2 class="text-xl font-bold text-stone-900 tracking-tight text-center">Create account</h2>
+        <p class="text-xs text-stone-400 text-center mt-1 mb-6">Start managing your purity logs and metrics seamlessly.</p>
 
+        <form method="POST" action="{{ route('register') }}" class="space-y-4">
+            @csrf
+            <div>
+                <label class="block text-xs font-semibold text-stone-500 uppercase tracking-wider mb-1.5">Name</label>
+                <input type="text" name="name" required autofocus class="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-xl text-sm focus:outline-none focus:border-stone-400 transition" />
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-stone-500 uppercase tracking-wider mb-1.5">Email Address</label>
+                <input type="email" name="email" required class="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-xl text-sm focus:outline-none focus:border-stone-400 transition" />
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-stone-500 uppercase tracking-wider mb-1.5">Password</label>
+                <input type="password" name="password" required class="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-xl text-sm focus:outline-none focus:border-stone-400 transition" />
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-stone-500 uppercase tracking-wider mb-1.5">Confirm Password</label>
+                <input type="password" name="password_confirmation" required class="w-full px-3 py-2.5 bg-stone-50 border border-stone-200 rounded-xl text-sm focus:outline-none focus:border-stone-400 transition" />
+            </div>
+            <button type="submit" class="w-full py-3 bg-stone-900 text-white rounded-xl text-sm font-medium hover:bg-stone-800 transition shadow-sm mt-2">
+                Register Account
+            </button>
+        </form>
     </div>
-</x-guest-layout>
+</body>
+</html>

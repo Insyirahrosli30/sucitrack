@@ -7,8 +7,8 @@ export default defineConfig({
             input: [
                 'resources/css/app.css',
                 'resources/js/app.js',
-                'resources/js/dashboardscript.js',
-                'resources/js/calendarscript.js'
+                'resources/js/dashboardscript.js', 
+                'resources/js/calendarscript.js'   
             ],
             refresh: true,
         }),
