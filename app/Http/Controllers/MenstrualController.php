@@ -165,7 +165,7 @@ class MenstrualController extends Controller
     }
 
     /**
-     * PEMBETULAN: Memasukkan medan missed_date ke dalam pangkalan data
+     * Memasukkan medan missed_date ke dalam pangkalan data
      */
     private function createLog($userId, $prayerName, $timestamp)
     {
@@ -173,7 +173,7 @@ class MenstrualController extends Controller
             'user_id'      => $userId,
             'prayer_name'  => $prayerName,
             'is_completed' => false,
-            'missed_date'  => $timestamp->format('Y-m-d'), // Memenuhi keperluan struktur DB anda
+            'missed_date'  => $timestamp->format('Y-m-d'),
             'created_at'   => $timestamp, 
         ]);
     }

@@ -50,85 +50,23 @@ class DashboardController extends Controller
         }
 
         // ------------------------------------------------------------
-        // LOGIK B: KIRAAN TEORITIKAL FIQH DI KOTAK KIRI (SUMMARY)
+        // LOGIK B & C: AMBIL SENARAI DARI DATABASE SECARA TERUS (FIXED)
         // ------------------------------------------------------------
-        $calculatedFajrCount = 0;
-        $calculatedZuhrCount = 0;
-        $calculatedAsrCount = 0;
-        $calculatedMaghribCount = 0;
-        $calculatedIshaCount = 0;
-
-        $prayer = [
-            'Fajr' => '05:41', 'Dhuhr' => '13:12', 'Asr' => '16:38', 'Maghrib' => '19:24', 'Isha' => '20:39'
-        ];
-
-        $allRecords = MenstrualRecords::where('user_id', $userId)->get();
-
-        foreach ($allRecords as $record) {
-            if (!$record->end_datetime) {
-                continue;
-            }
-
-            $start = Carbon::parse($record->start_datetime);
-            $end = Carbon::parse($record->end_datetime);
-
-            // Semakan waktu mula haid
-            $fajrStart    = Carbon::parse($start->format('Y-m-d') . ' ' . $prayer['Fajr']);
-            $dhuhrStart   = Carbon::parse($start->format('Y-m-d') . ' ' . $prayer['Dhuhr']);
-            $asrStart     = Carbon::parse($start->format('Y-m-d') . ' ' . $prayer['Asr']);
-            $maghribStart = Carbon::parse($start->format('Y-m-d') . ' ' . $prayer['Maghrib']);
-            $ishaStart    = Carbon::parse($start->format('Y-m-d') . ' ' . $prayer['Isha']);
-
-            if ($start->between($fajrStart, $dhuhrStart)) {
-                $calculatedFajrCount++;
-            } elseif ($start->between($dhuhrStart, $asrStart)) {
-                $calculatedZuhrCount++;
-            } elseif ($start->between($asrStart, $maghribStart)) {
-                $calculatedAsrCount++;
-            } elseif ($start->between($maghribStart, $ishaStart)) {
-                $calculatedMaghribCount++;
-            } else {
-                $calculatedIshaCount++;
-            }
-
-            // Semakan waktu tamat haid (Kebolehan Jamak Shafi'i)
-            $fajrEnd    = Carbon::parse($end->format('Y-m-d') . ' ' . $prayer['Fajr']);
-            $dhuhrEnd   = Carbon::parse($end->format('Y-m-d') . ' ' . $prayer['Dhuhr']);
-            $asrEnd     = Carbon::parse($end->format('Y-m-d') . ' ' . $prayer['Asr']);
-            $maghribEnd = Carbon::parse($end->format('Y-m-d') . ' ' . $prayer['Maghrib']);
-            $ishaEnd    = Carbon::parse($end->format('Y-m-d') . ' ' . $prayer['Isha']);
-
-            if ($end->between($fajrEnd, $dhuhrEnd)) {
-                $calculatedFajrCount++;
-            } elseif ($end->between($dhuhrEnd, $asrEnd)) {
-                $calculatedZuhrCount++;
-            } elseif ($end->between($asrEnd, $maghribEnd)) {
-                $calculatedAsrCount++;
-                $calculatedZuhrCount++; 
-            } elseif ($end->between($maghribEnd, $ishaEnd)) {
-                $calculatedMaghribCount++;
-            } else {
-                $calculatedIshaCount++;
-                $calculatedMaghribCount++; 
-            }
-        }
-
-        // ------------------------------------------------------------
-        // LOGIK C: AMBIL DATA SELESAI & TOLAK (KONSISTEN LOWERCASE)
-        // ------------------------------------------------------------
-        $completedLogs = QadaLog::where('user_id', $userId)
-            ->where('is_completed', true)
+        
+        // Ambil jumlah qada yang BELUM diselesaikan dari database (is_completed = false)
+        $pendingLogsSummary = QadaLog::where('user_id', $userId)
+            ->where('is_completed', false)
             ->selectRaw('prayer_name, count(*) as total')
             ->groupBy('prayer_name')
             ->pluck('total', 'prayer_name')
             ->toArray();
 
-        // Paksa guna lowercase key untuk menyamai standard input baru database
-        $finalFajrOwed    = max(0, $calculatedFajrCount - ($completedLogs['fajr'] ?? 0));
-        $finalZuhrOwed    = max(0, $calculatedZuhrCount - ($completedLogs['zuhr'] ?? 0));
-        $finalAsrOwed     = max(0, $calculatedAsrCount - ($completedLogs['asr'] ?? 0));
-        $finalMaghribOwed = max(0, $calculatedMaghribCount - ($completedLogs['maghrib'] ?? 0));
-        $finalIshaOwed    = max(0, $calculatedIshaCount - ($completedLogs['isha'] ?? 0));
+        // Tetapkan nilai paparan untuk ringkasan di kotak kiri menggunakan lowercase keys dari database
+        $finalFajrOwed    = $pendingLogsSummary['fajr'] ?? 0;
+        $finalZuhrOwed    = $pendingLogsSummary['zuhr'] ?? 0;
+        $finalAsrOwed     = $pendingLogsSummary['asr'] ?? 0;
+        $finalMaghribOwed = $pendingLogsSummary['maghrib'] ?? 0;
+        $finalIshaOwed    = $pendingLogsSummary['isha'] ?? 0;
 
         // Ambil senarai tugasan interaktif yang belum diselesaikan (Kotak Kanan)
         $pendingQadaItems = QadaLog::where('user_id', $userId)
@@ -138,7 +76,14 @@ class DashboardController extends Controller
 
         $pendingQadaCount = $pendingQadaItems->count();
 
+        // Ambil maklumat semua rekod untuk kalendar / js
+        $allRecords = MenstrualRecords::where('user_id', $userId)->get();
+
         // Cari waktu solat seterusnya untuk widget dashboard
+        $prayer = [
+            'Fajr' => '05:41', 'Dhuhr' => '13:12', 'Asr' => '16:38', 'Maghrib' => '19:24', 'Isha' => '20:39'
+        ];
+
         $nextPrayer = 'Fajr';
         $currentTime = now()->format('H:i');
         foreach ($prayer as $name => $time) {
