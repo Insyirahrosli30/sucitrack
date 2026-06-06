@@ -165,7 +165,7 @@ This application is designed using Tailwind CSS and Blade templates to provide a
 ## 5. Entity Relationship Diagram (ERD)
 
 <p align="center">
-    <img src="public/images/ERD_SuciTrack.png" width="450">
+    <img src="public/images/ERD_SuciTrack.png" width="350">
 </p>
 
 <p align="center">
@@ -178,7 +178,7 @@ A one-to-many relationship exists between the tables, where one user can create 
 ## 6. Sequence Diagram
 
 <p align="center">
-    <img src="public/images/SequenceDiagram.png" width="750">
+    <img src="public/images/SequenceDiagram.png" width="800">
 </p>
 
 <p align="center">
