@@ -368,28 +368,48 @@ The `MenstrualRecord` model represents menstrual cycle data in the application. 
 
 The `QadaLog` model represents individual records of missed prayers (Qada) in the application. It is an **Eloquent ORM model** that maps to the `qada_logs` database table and defines the attributes, casting rules, and relationships needed for Qada tracking.
 
-`QadaLog` model is the **core data structure for missed prayers**. It securely ties each log to a user and optionally to a menstrual cycle, supports CRUD operations, and enforces clean data types. 
-
 1. **Fillable Attributes**  
-   - The `$fillable` array allows mass assignment of:  
-     - `user_id` → links the log to a specific user.  
-     - `menstrual_record_id` → connects the log to a menstrual cycle record.  
-     - `qada_date` → the date of the missed prayer.  
-     - `prayer_type` → specifies which prayer (Subuh, Zohor, Asar, Maghrib, Isyak).  
-     - `is_completed` → boolean flag indicating if the Qada has been performed.  
-     - `notes` → optional remarks or context.
+   The `$fillable` array allows mass assignment of:  
+      -`user_id` → links the log to a specific user.  
+      -`menstrual_record_id` → connects the log to a menstrual cycle record.  
+      -`qada_date` → the date of the missed prayer.  
+      -`prayer_type` → specifies which prayer (Subuh, Zohor, Asar, Maghrib, Isyak).  
+      -`is_completed` → boolean flag indicating if the Qada has been performed.  
+      -`notes` → optional remarks or context.
 
-2. **Attribute Casting**  
-   - `$casts` ensures proper data types:  
-     - `qada_date` is treated as a `date` object.  
-     - `is_completed` is treated as a `boolean`.  
-   - This simplifies queries and logic by enforcing consistent types.
+2. **Relationships**  
+    -`user()` → defines a `belongsTo` relationship with the `User` model, linking each Qada log to its owner.  
+    -`menstrualRecord()` → defines a `belongsTo` relationship with the `MenstrualRecord` model, connecting Qada logs to the cycle that generated them.
 
-3. **Relationships**  
-   - `user()` → defines a `belongsTo` relationship with the `User` model, linking each Qada log to its owner.  
-   - `menstrualRecord()` → defines a `belongsTo` relationship with the `MenstrualRecord` model, connecting Qada logs to the cycle that generated them.
+### Reminder.php
+<img width="554" height="539" alt="image" src="https://github.com/user-attachments/assets/a9c4c948-77e7-46b4-b35b-6554aaf11a6c" />
 
+### Reminder Model Explanation
 
+The `Reminder` model represents  reminders in the application. It is an **Eloquent ORM model** that maps to the `reminders` table and defines the attributes and relationships needed for notification management.
+
+This model provides a simple yet effective way to manage user notifications. By linking reminders to users, it ensures that important messages are delivered and monitored.
+
+### User.php
+<img width="632" height="870" alt="Screenshot 2026-06-08 024629" src="https://github.com/user-attachments/assets/f7ee0907-e1cb-46d2-afa1-fa29be4e913c" />
+<img width="715" height="906" alt="Screenshot 2026-06-08 024620" src="https://github.com/user-attachments/assets/c836b76c-c035-4df8-8cb6-ef44da4bfb5e" />
+
+### User Model Explanation
+
+The `User` model represents the people who use the application. It is built on Laravel’s authentication system, which handles login, registration, and security.  
+
+- **Basic Information**  
+  Stores the user’s `name`, `email`, and `password`. Sensitive fields like `password` and `remember_token` are hidden for security.  
+
+- **Authentication Features**  
+  Supports login and API tokens (via Sanctum), and allows notifications to be sent to users.  
+
+- **Data Casting**  
+  Automatically converts `email_verified_at` into a date and ensures `password` is securely hashed.  
+
+- **Relationships**  
+  - A user can have many **menstrual records** (`hasMany` relationship).  
+  - A user can have many **reminders** (`hasMany` relationship).  
 
 
 ## 9. Recommendations
