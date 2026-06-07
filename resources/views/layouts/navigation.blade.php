@@ -42,6 +42,15 @@
                 Qada' List
             </a>
 
+            <!-- LOGOUT (OPTION 2) -->
+            <form method="POST" action="{{ route('logout') }}" class="ml-2">
+                @csrf
+                <button type="submit"
+                    class="px-4 py-2 rounded-xl text-red-500 hover:bg-red-50 transition">
+                    Logout
+                </button>
+            </form>
+
         </div>
 
     </div>

@@ -82,7 +82,7 @@
 
             </div>
 
-            <!-- RIGHT SIDE (PRAYER FIXED) -->
+            <!-- RIGHT SIDE -->
             <div class="lg:col-span-1 space-y-6 lg:sticky lg:top-10 h-fit">
 
                 <div class="bg-white/60 backdrop-blur-md border border-pink-100 rounded-3xl p-6 shadow-sm">
