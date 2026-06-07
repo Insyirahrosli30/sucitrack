@@ -71,13 +71,12 @@ Many contemporary period tracking applications are designed purely from a medica
 
 ### 2.2 Project Objectives
 - Provide an interactive website for users to login, view, and manage their current and historical cycle data.
-- Eliminate manual calculation errors by automating the determination of purity days, valid menstruation limits, and transitional phases.
-- Support users in fulfilling their religious duties by implementing a structured system to track and clear Qada' (missed) prayers.
+- Eliminate manual calculation errors by automating the determination of purity days, valid menstruation days.
+- Support users in fulfilling their religious duties by implementing a structured system to track and notify Qada'(missed) prayers.
 
 ## 3. System Architecture
 
 ### 3.1 Core Features
-The application is built around four primary functional pillars:
 - Secure user authentication through registration and login systems to ensure user data protection and privacy.
 - Menstrual Records Management (CRUD) Create, Read, Update, and Delete capabilities allowing users to log start/end times.
 - A visual featuring current cycle status, days of purity, unresolved qada' prayers, zone selection based on systemic calculations.
