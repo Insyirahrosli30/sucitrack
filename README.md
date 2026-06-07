@@ -192,10 +192,7 @@ The sequence diagram illustrates the interaction between the user, SuciTrack sys
 <img width="1917" height="967" alt="1" src="https://github.com/user-attachments/assets/b96edc71-34eb-4c1e-bb97-8983d829c8e3" />
 <img width="1917" height="970" alt="2" src="https://github.com/user-attachments/assets/1983b76f-2bb5-4145-8c6f-fa1a092ec4c0" />
 <img width="1917" height="967" alt="3" src="https://github.com/user-attachments/assets/692e53d3-7e58-4ac3-b26b-394354e6c142" />
-
-<img width="1760" height="869" alt="Screenshot 2026-06-08 012721" src="https://github.com/user-attachments/assets/9d17c21d-8128-4040-82e9-0a0044e271f2" />
-<img width="1919" height="898" alt="Screenshot 2026-06-08 012813" src="https://github.com/user-attachments/assets/a2be86c7-26e2-492b-bcd0-d4e53d495979" />
-<img width="1919" height="895" alt="Screenshot 2026-06-08 012804" src="https://github.com/user-attachments/assets/8409802c-9cd6-49eb-a57f-c2b3c4a1bf3e" />
+<img width="1917" height="971" alt="Screenshot 2026-06-08 030951" src="https://github.com/user-attachments/assets/c66b8e14-9fb5-4424-a74b-a89602cd62b6" />
 
 ## 8. Implementation Details
 ### routes.web.php
