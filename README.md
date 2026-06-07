@@ -321,6 +321,22 @@ The 'DashboardController' is responsible for displaying the main dashboard, summ
 5. **Destroy**  
    - Deletes a specific Qada log.  
    - Redirects to the index with confirmation.
+  
+### PrayerController 
+<img width="1057" height="913" alt="Screenshot 2026-06-08 022338" src="https://github.com/user-attachments/assets/b7c65820-c6e9-405a-94e6-dcbea0d6c6fd" />
+<img width="1036" height="784" alt="Screenshot 2026-06-08 022346" src="https://github.com/user-attachments/assets/5be4d9b8-23fb-4d17-bc4c-f518172152e6" />
+
+### PrayerController Explanation
+
+The `PrayerController` handles the retrieval and display of daily prayer times, as well as determining the next upcoming prayer for the user. It integrates with an external API to ensure accurate timings.
+
+1. **Index Method**  
+   - Calls the **Aladhan API** (`https://api.aladhan.com/v1/timingsByCity`) to fetch prayer times for Rawang, Malaysia.  
+   - Extracts the five obligatory prayers: Fajr, Dhuhr, Asr, Maghrib, and Isha.  
+   - Converts these times into **Carbon objects** bound to the Malaysia timezone (`Asia/Kuala_Lumpur`) for real-time comparison.  
+   - Determines the **next prayer** by checking which prayer time is still upcoming compared to the current time. Defaults to Fajr if all prayers for the day have passed.  
+   - Provides localized labels (Subuh, Zohor, Asar, Maghrib, Isyak) for display.  
+   - Passes the prayer times, next prayer, and labels to the `menstrual_records.dashboard` view.
 
 
 
