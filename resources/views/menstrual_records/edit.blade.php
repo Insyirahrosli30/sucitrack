@@ -10,35 +10,48 @@
 
 <div class="flex justify-center pt-12">
 
-    <div class="w-full max-w-2xl">
+    <div class="w-full max-w-2xl space-y-8">
 
         <!-- HEADER -->
         <div class="bg-white/60 backdrop-blur-md border border-pink-100 rounded-3xl p-6 shadow-sm">
 
             <h1 class="text-2xl font-bold gradient-text">
-                Start New Cycle
+                End Cycle
             </h1>
 
             <p class="text-sm text-gray-500 mt-2">
-                Log your menstrual start date and time
+                Set the end date and time for this cycle
             </p>
 
         </div>
 
+        <!-- DETAILS CARD -->
+        <div class="bg-white/60 backdrop-blur-md border border-pink-100 rounded-3xl p-6 shadow-sm space-y-4">
+
+            <div>
+                <p class="text-xs text-gray-400 uppercase">Start Date & Time</p>
+                <p class="text-gray-700 font-medium">
+                    {{ \Carbon\Carbon::parse($record->start_datetime)->format('d M Y, h:i A') }}
+                </p>
+            </div>
+
+        </div>
+
         <!-- FORM CARD -->
-        <div class="mt-6 bg-white/60 backdrop-blur-md border border-pink-100 rounded-3xl p-6 shadow-sm">
+        <div class="bg-white/60 backdrop-blur-md border border-pink-100 rounded-3xl p-6 shadow-sm">
 
-            <form method="POST" action="{{ route('menstrual_records.store') }}" class="space-y-6">
+            <form method="POST" action="{{ route('menstrual_records.update', $record->id) }}" class="space-y-6">
                 @csrf
+                @method('PUT')
 
-                <!-- INPUT -->
+                <!-- END DATETIME -->
                 <div>
                     <label class="block text-sm text-gray-600 mb-2">
-                        Start Date & Time
+                        End Date & Time
                     </label>
 
                     <input type="datetime-local"
-                           name="start_datetime"
+                           name="end_datetime"
                            required
                            class="w-full rounded-2xl border border-pink-100 p-3 focus:ring-2 focus:ring-pink-300 focus:outline-none">
                 </div>

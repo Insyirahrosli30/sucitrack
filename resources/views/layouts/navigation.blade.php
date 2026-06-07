@@ -1,28 +1,58 @@
-<nav class="bg-pink-100 border-b border-pink-200">
-    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+<nav class="bg-white/60 backdrop-blur-md border-b border-pink-100 shadow-sm">
 
-        <div class="font-bold text-pink-700">
-            SuciTrack
+    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+
+        <!-- LOGO -->
+        <div class="flex items-center gap-2">
+
+            <span class="text-pink-500 text-xl">
+                ☾
+            </span>
+
+            <span class="logo-font text-xl font-bold gradient-text">
+                SUCITRACK
+            </span>
+
         </div>
 
-        <div class="flex gap-6 text-sm">
+        <!-- MENU -->
+        <div class="flex items-center gap-3">
 
             <a href="{{ route('dashboard') }}"
-               class="{{ request()->is('dashboard') ? 'text-pink-700 font-semibold' : 'text-gray-500 hover:text-pink-700' }}">
+               class="px-4 py-2 rounded-xl transition
+               {{ request()->is('dashboard')
+                    ? 'bg-gradient-to-r from-pink-400 to-purple-400 text-white shadow-sm'
+                    : 'text-gray-600 hover:bg-white/70' }}">
                 Dashboard
             </a>
 
             <a href="{{ route('menstrual_records.index') }}"
-               class="{{ request()->is('menstrual_records*') ? 'text-pink-700 font-semibold' : 'text-gray-500 hover:text-pink-700' }}">
+               class="px-4 py-2 rounded-xl transition
+               {{ request()->is('menstrual_records*')
+                    ? 'bg-gradient-to-r from-pink-400 to-purple-400 text-white shadow-sm'
+                    : 'text-gray-600 hover:bg-white/70' }}">
                 History & Records
             </a>
 
             <a href="{{ route('qada.index') }}"
-               class="{{ request()->is('qada*') ? 'text-pink-700 font-semibold' : 'text-gray-500 hover:text-pink-700' }}">
+               class="px-4 py-2 rounded-xl transition
+               {{ request()->is('qada*')
+                    ? 'bg-gradient-to-r from-pink-400 to-purple-400 text-white shadow-sm'
+                    : 'text-gray-600 hover:bg-white/70' }}">
                 Qada' List
             </a>
+
+            <!-- LOGOUT (OPTION 2) -->
+            <form method="POST" action="{{ route('logout') }}" class="ml-2">
+                @csrf
+                <button type="submit"
+                    class="px-4 py-2 rounded-xl text-red-500 hover:bg-red-50 transition">
+                    Logout
+                </button>
+            </form>
 
         </div>
 
     </div>
+
 </nav>
