@@ -261,7 +261,7 @@ The MenstrualController manages all menstrual cycle records and integrates them 
    - Redirects the user to edit the latest active cycle.  
    - If no active cycle exists, it shows an error message.
   
-   ### DashboardController
+### DashboardController
 <img width="802" height="919" alt="Screenshot 2026-06-08 020825" src="https://github.com/user-attachments/assets/2e5986a4-acda-42e6-9792-2d745d39410a" />
 <img width="801" height="897" alt="Screenshot 2026-06-08 020815" src="https://github.com/user-attachments/assets/a06d11f9-9995-4404-b697-99883c7d1c2d" />
 <img width="874" height="913" alt="Screenshot 2026-06-08 020802" src="https://github.com/user-attachments/assets/0c67ed83-292b-4ceb-8aee-a447741b5bf8" />
@@ -292,6 +292,37 @@ The 'DashboardController' is responsible for displaying the main dashboard, summ
    - Calls the WaktuSolat API (`https://api.waktusolat.app/v2/solat/KUL`) to fetch prayer times for Kuala Lumpur.  
    - Extracts today’s timings (Subuh, Zohor, Asar, Maghrib, Isya) and returns them in a simplified format.  
    - Returns `null` if the API fails or data is missing.
+
+### QadaController
+<img width="748" height="920" alt="Screenshot 2026-06-08 021840" src="https://github.com/user-attachments/assets/95f93ef8-f4c3-438c-9ca0-51155467c52c" />
+<img width="726" height="910" alt="Screenshot 2026-06-08 021830" src="https://github.com/user-attachments/assets/b415d916-05ae-4ab0-9392-621bd8ffb36b" />
+<img width="1024" height="890" alt="Screenshot 2026-06-08 021755" src="https://github.com/user-attachments/assets/89990221-e45a-4c18-97a1-fe53365bb72f" />
+
+### QadaController Explanation
+
+1. **Index**  
+   - Retrieves all Qada logs for the authenticated user, ordered by date.  
+   - Calculates the number of pending (`is_completed = false`) and completed (`is_completed = true`) Qada prayers.  
+   - Passes this data to the `indexqada` view for display.
+
+2. **Create & Store**  
+   - `create()` shows a form to add a new Qada log.  
+   - `store()` validates input (`prayer_type`, `qada_date`), then creates a new log with default `is_completed = false`.  
+   - Redirects to the index with a success message.
+
+3. **Show**  
+   - Displays details of a specific Qada log in the `showqada` view.
+
+4. **Edit & Update**  
+   - `edit()` loads a Qada log for editing.  
+   - `update()` modifies the log’s attributes (`prayer_type`, `qada_date`, `is_completed`, `notes`).  
+   - Redirects back with a success message.
+
+5. **Destroy**  
+   - Deletes a specific Qada log.  
+   - Redirects to the index with confirmation.
+
+
 
 ## 9. Recommendations
 
