@@ -221,226 +221,44 @@ The 'web.php' file in Laravel defines the web routes of the application. Routes 
 
 ### Controller
 ### MenstrualController
-<?php
 
-namespace App\Http\Controllers;
+<img width="874" height="895" alt="Screenshot 2026-06-08 015746" src="https://github.com/user-attachments/assets/183483ee-f154-48f6-ba4c-dab69987a094" />
+<img width="773" height="896" alt="Screenshot 2026-06-08 015728" src="https://github.com/user-attachments/assets/ff8c6240-8761-43a0-84a9-293fee1ec9ae" />
+<img width="859" height="916" alt="Screenshot 2026-06-08 015716" src="https://github.com/user-attachments/assets/5e549d5a-4fc7-4e98-8993-6d8eccef7e34" />
+<img width="856" height="881" alt="Screenshot 2026-06-08 015659" src="https://github.com/user-attachments/assets/9d0e59a1-7827-4b6a-8c9a-ae1336995461" />
+<img width="871" height="907" alt="Screenshot 2026-06-08 015641" src="https://github.com/user-attachments/assets/bad3c0a4-57cb-459a-a08c-7ee64782e80e" />
+<img width="896" height="684" alt="Screenshot 2026-06-08 015813" src="https://github.com/user-attachments/assets/6aa0e914-3148-492a-9fa6-7042399b0c25" />
+<img width="760" height="909" alt="Screenshot 2026-06-08 015759" src="https://github.com/user-attachments/assets/99e2f990-c2ac-4133-908a-ffbb3a5a69f6" />
 
-use App\Models\MenstrualRecord;
-use App\Models\QadaLog;
-use Illuminate\Http\Request;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Http;
+### MenstrualController Explanation
 
-class MenstrualController extends Controller
-{
-    public function index()
-    {
-        $menstrual_records = MenstrualRecord::where('user_id', auth()->id())
-            ->orderBy('start_datetime', 'desc')
-            ->get();
+The MenstrualController manages all menstrual cycle records and integrates them with Qada (missed prayers) tracking. It provides CRUD operations, cycle management, and a dashboard view for users.
 
-        return view('menstrual_records.index', compact('menstrual_records'));
-    }
+1. **Index**  
+   - Retrieves all menstrual records for the authenticated user, ordered by start date.  
+   - Displays them in the `menstrual_records.index` view.
 
-    public function create()
-    {
-        return view('menstrual_records.create');
-    }
+2. **Create & Store**  
+   - create() shows a form to start a new cycle.  
+   - store() validates input, saves a new record with 'start_datetime', and sets 'end_datetime' as null until the cycle ends.
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'start_datetime' => 'required|date',
-        ]);
+3. **Edit & Update**  
+   - edit() loads a specific record for editing.  
+   - update() validates the 'end_datetime', updates the record, deletes old Qada logs, and regenerates Qada entries using the **Qada Engine**.
 
-        MenstrualRecord::create([
-            'start_datetime' => $request->start_datetime,
-            'user_id' => auth()->id(),
-            'end_datetime' => null,
-        ]);
+4. **Destroy**  
+   - Deletes a menstrual record and its associated Qada logs.
 
-        return redirect()->route('menstrual_records.index')
-            ->with('success', 'Period started successfully.');
-    }
+5. **Dashboard**  
+   - Shows the user’s current cycle status ('activeRecord'), whether they are clean ('isClean'), number of purity days since last cycle, and counts of pending and completed Qada prayers.
 
-    public function edit(string $id)
-    {
-        $record = MenstrualRecord::where('user_id', auth()->id())
-            ->findOrFail($id);
+6. **Qada Engine**  
+   - 'generateQada()' calculates missed prayers during the menstrual period.  
+   - It fetches prayer times via the **Aladhan API**, checks which prayers fall within the cycle, and auto-generates Qada logs for them.
 
-        return view('menstrual_records.edit', compact('record'));
-    }
-
-    public function update(Request $request, string $id)
-    {
-        $request->validate([
-            'end_datetime' => 'required|date|after_or_equal:start_datetime',
-        ]);
-
-        $record = MenstrualRecord::where('user_id', auth()->id())
-            ->findOrFail($id);
-
-        $record->update([
-            'end_datetime' => $request->end_datetime,
-        ]);
-
-        QadaLog::where('menstrual_record_id', $record->id)->delete();
-
-        $this->generateQada($record);
-
-        return redirect()->route('menstrual_records.index')
-            ->with('success', 'Cycle ended and Qada generated successfully.');
-    }
-
-    public function destroy(string $id)
-    {
-        $record = MenstrualRecord::where('user_id', auth()->id())
-            ->findOrFail($id);
-
-        QadaLog::where('menstrual_record_id', $record->id)->delete();
-
-        $record->delete();
-
-        return redirect()->route('menstrual_records.index')
-            ->with('success', 'Record deleted successfully.');
-    }
-
-    public function dashboard()
-    {
-        $userId = auth()->id();
-
-        $activeRecord = MenstrualRecord::where('user_id', $userId)
-            ->whereNull('end_datetime')
-            ->latest()
-            ->first();
-
-        $isClean = !$activeRecord;
-
-        $lastEndedRecord = MenstrualRecord::where('user_id', $userId)
-            ->whereNotNull('end_datetime')
-            ->orderBy('end_datetime', 'desc')
-            ->first();
-
-        $daysOfPurity = $lastEndedRecord
-            ? now()->diffInDays(Carbon::parse($lastEndedRecord->end_datetime))
-            : 0;
-
-        $pendingQadaCount = QadaLog::where('user_id', $userId)
-            ->where('is_completed', false)
-            ->count();
-
-        $completedQadaCount = QadaLog::where('user_id', $userId)
-            ->where('is_completed', true)
-            ->count();
-
-        return view('dashboard', compact(
-            'activeRecord',
-            'daysOfPurity',
-            'isClean',
-            'pendingQadaCount',
-            'completedQadaCount'
-        ));
-    }
-
-    // =========================
-    // QADA ENGINE
-    // =========================
-
-    private function generateQada(MenstrualRecord $record)
-    {
-        $start = Carbon::parse($record->start_datetime);
-        $end = Carbon::parse($record->end_datetime);
-
-        $periodDays = [];
-        $current = $start->copy();
-
-        while ($current->lte($end)) {
-            $periodDays[] = $current->toDateString();
-            $current->addDay();
-        }
-
-        foreach ($periodDays as $date) {
-
-            $prayerTimes = $this->getPrayerTimes($date);
-
-            if (!$prayerTimes) {
-                continue;
-            }
-
-            foreach ($prayerTimes as $prayerName => $time) {
-
-                if (!$time) continue;
-
-                $prayerDateTime = Carbon::parse($date . ' ' . $time);
-
-                $diffMinutes = $prayerDateTime->diffInMinutes($start, false);
-
-                if ($prayerDateTime->lessThan($start) && $diffMinutes >= 10) {
-
-                    QadaLog::firstOrCreate([
-                        'user_id' => auth()->id(),
-                        'menstrual_record_id' => $record->id,
-                        'qada_date' => $date,
-                        'prayer_type' => $prayerName,
-                    ], [
-                        'is_completed' => false,
-                        'notes' => 'Auto-generated from menstrual cycle'
-                    ]);
-                }
-            }
-        }
-    }
-
-    private function getPrayerTimes($date)
-    {
-        $response = Http::timeout(10)->get(
-            "https://api.aladhan.com/v1/timingsByCity",
-            [
-                'city' => 'Kuala Lumpur',
-                'country' => 'Malaysia',
-                'method' => 2,
-                'date' => Carbon::parse($date)->format('d-m-Y'),
-            ]
-        );
-
-        if (!$response->successful()) {
-            return null;
-        }
-
-        $data = $response->json();
-
-        if (!isset($data['data']['timings'])) {
-            return null;
-        }
-
-        $t = $data['data']['timings'];
-
-        return [
-            'Subuh'   => substr($t['Fajr'], 0, 5),
-            'Zohor'   => substr($t['Dhuhr'], 0, 5),
-            'Asar'    => substr($t['Asr'], 0, 5),
-            'Maghrib' => substr($t['Maghrib'], 0, 5),
-            'Isyak'   => substr($t['Isha'], 0, 5),
-        ];
-    }
-
-    public function endCycle()
-    {
-        $record = MenstrualRecord::where('user_id', auth()->id())
-            ->whereNull('end_datetime')
-            ->latest()
-            ->first();
-
-        if (!$record) {
-            return redirect()->route('menstrual_records.index')
-                ->with('error', 'No active cycle. Please start a cycle first.');
-        }
-
-        return redirect()->route('menstrual_records.edit', $record->id);
-    }
-}
-
-
+7. **End Cycle**  
+   - Redirects the user to edit the latest active cycle.  
+   - If no active cycle exists, it shows an error message.
 
 
 
