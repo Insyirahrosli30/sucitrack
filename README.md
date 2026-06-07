@@ -1,4 +1,4 @@
-# SuciTrack – Menstrual Purity Tracker
+<img width="1919" height="898" alt="image" src="https://github.com/user-attachments/assets/1e8f64f7-360e-4b80-922a-046a1cff2e90" /># SuciTrack – Menstrual Purity Tracker
 
 ## Group Members
 **Alya Qistina Nadia binti Idris (231134)**
@@ -188,6 +188,12 @@ A one-to-many relationship exists between the tables, where one user can create 
 The sequence diagram illustrates the interaction between the user, SuciTrack system, database, and JAKIM API. The process begins when a user registers an account and logs into the system. The application then verifies the user's credentials through the database before granting access to the dashboard. When a menstrual record is created, the system stores the record in the database and retrieves prayer time information from the JAKIM API based on the selected zone. The processed data is then displayed on the dashboard, allowing users to monitor their menstrual cycle information and prayer-related records through a centralized interface.
 
 ## 7. User Interface (Completed System)
+<img width="1918" height="954" alt="Screenshot 2026-06-08 012749" src="https://github.com/user-attachments/assets/cd7e753e-0637-49c4-966a-ee3a10275341" />
+<img width="1918" height="940" alt="Screenshot 2026-06-08 012733" src="https://github.com/user-attachments/assets/3a201abd-c28e-4110-8b5a-f220b7d759b5" />
+<img width="1760" height="869" alt="Screenshot 2026-06-08 012721" src="https://github.com/user-attachments/assets/9d17c21d-8128-4040-82e9-0a0044e271f2" />
+<img width="1919" height="898" alt="Screenshot 2026-06-08 012813" src="https://github.com/user-attachments/assets/a2be86c7-26e2-492b-bcd0-d4e53d495979" />
+<img width="1919" height="895" alt="Screenshot 2026-06-08 012804" src="https://github.com/user-attachments/assets/8409802c-9cd6-49eb-a57f-c2b3c4a1bf3e" />
+
 
 ## 8. Implementation Details
 
