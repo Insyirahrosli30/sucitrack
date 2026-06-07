@@ -189,9 +189,10 @@ The sequence diagram illustrates the interaction between the user, SuciTrack sys
 
 ## 7. User Interface (Completed System)
 <img width="1837" height="893" alt="image" src="https://github.com/user-attachments/assets/249a5d1d-3d5c-42f4-8137-b145410762e3" />
-<img width="1919" height="898" alt="image" src="https://github.com/user-attachments/assets/1e8f64f7-360e-4b80-922a-046a1cff2e90" /># SuciTrack – Menstrual Purity Tracker
-<img width="1918" height="954" alt="Screenshot 2026-06-08 012749" src="https://github.com/user-attachments/assets/cd7e753e-0637-49c4-966a-ee3a10275341" />
-<img width="1918" height="940" alt="Screenshot 2026-06-08 012733" src="https://github.com/user-attachments/assets/3a201abd-c28e-4110-8b5a-f220b7d759b5" />
+<img width="1917" height="967" alt="1" src="https://github.com/user-attachments/assets/b96edc71-34eb-4c1e-bb97-8983d829c8e3" />
+<img width="1917" height="970" alt="2" src="https://github.com/user-attachments/assets/1983b76f-2bb5-4145-8c6f-fa1a092ec4c0" />
+<img width="1917" height="967" alt="3" src="https://github.com/user-attachments/assets/692e53d3-7e58-4ac3-b26b-394354e6c142" />
+
 <img width="1760" height="869" alt="Screenshot 2026-06-08 012721" src="https://github.com/user-attachments/assets/9d17c21d-8128-4040-82e9-0a0044e271f2" />
 <img width="1919" height="898" alt="Screenshot 2026-06-08 012813" src="https://github.com/user-attachments/assets/a2be86c7-26e2-492b-bcd0-d4e53d495979" />
 <img width="1919" height="895" alt="Screenshot 2026-06-08 012804" src="https://github.com/user-attachments/assets/8409802c-9cd6-49eb-a57f-c2b3c4a1bf3e" />
