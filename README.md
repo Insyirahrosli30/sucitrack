@@ -337,6 +337,58 @@ The `PrayerController` handles the retrieval and display of daily prayer times, 
    - Determines the **next prayer** by checking which prayer time is still upcoming compared to the current time. Defaults to Fajr if all prayers for the day have passed.  
    - Provides localized labels (Subuh, Zohor, Asar, Maghrib, Isyak) for display.  
    - Passes the prayer times, next prayer, and labels to the `menstrual_records.dashboard` view.
+  
+### Model
+### MenstrualRecord.php
+<img width="660" height="602" alt="image" src="https://github.com/user-attachments/assets/49e2bda1-dcf4-4e44-a174-40ca510cd900" />
+
+### MenstrualRecord Model Explanation
+
+The `MenstrualRecord` model represents menstrual cycle data in the application. It is an **Eloquent ORM model** that maps directly to the `menstrual_records` database table and defines the attributes and relationships used in the system.
+
+1. **Fillable Attributes**  
+     - `user_id` → links the record to a specific user.  
+     - `start_datetime` → the date and time when the cycle begins.  
+     - `end_datetime` → the date and time when the cycle ends.  
+     - `duration_days` → stores the calculated length of the cycle in days.  
+   - This protects against mass-assignment vulnerabilities by explicitly allowing only these fields.
+
+2. **Relationship**  
+   - Defines a `belongsTo` relationship with the `User` model.  
+   - This means each menstrual record is associated with exactly one user, enabling queries like `$record->user` to retrieve the owner of the record.
+
+3. **HasFactory Trait**  
+   - The `HasFactory` trait allows the use of Laravel’s model factories for testing and seeding data.  
+   - This makes it easier to generate sample menstrual records during development.
+  
+### QadaLog.php
+<img width="688" height="914" alt="image" src="https://github.com/user-attachments/assets/46bb99de-4bd6-4712-b94f-e90740ce447b" />
+
+### QadaLog Model Explanation
+
+The `QadaLog` model represents individual records of missed prayers (Qada) in the application. It is an **Eloquent ORM model** that maps to the `qada_logs` database table and defines the attributes, casting rules, and relationships needed for Qada tracking.
+
+`QadaLog` model is the **core data structure for missed prayers**. It securely ties each log to a user and optionally to a menstrual cycle, supports CRUD operations, and enforces clean data types. 
+
+1. **Fillable Attributes**  
+   - The `$fillable` array allows mass assignment of:  
+     - `user_id` → links the log to a specific user.  
+     - `menstrual_record_id` → connects the log to a menstrual cycle record.  
+     - `qada_date` → the date of the missed prayer.  
+     - `prayer_type` → specifies which prayer (Subuh, Zohor, Asar, Maghrib, Isyak).  
+     - `is_completed` → boolean flag indicating if the Qada has been performed.  
+     - `notes` → optional remarks or context.
+
+2. **Attribute Casting**  
+   - `$casts` ensures proper data types:  
+     - `qada_date` is treated as a `date` object.  
+     - `is_completed` is treated as a `boolean`.  
+   - This simplifies queries and logic by enforcing consistent types.
+
+3. **Relationships**  
+   - `user()` → defines a `belongsTo` relationship with the `User` model, linking each Qada log to its owner.  
+   - `menstrualRecord()` → defines a `belongsTo` relationship with the `MenstrualRecord` model, connecting Qada logs to the cycle that generated them.
+
 
 
 
