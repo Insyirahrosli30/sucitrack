@@ -196,10 +196,10 @@ The sequence diagram illustrates the interaction between the user, SuciTrack sys
 <img width="1919" height="895" alt="Screenshot 2026-06-08 012804" src="https://github.com/user-attachments/assets/8409802c-9cd6-49eb-a57f-c2b3c4a1bf3e" />
 
 ## 8. Implementation Details
-routes.web.php
+### routes.web.php
 <img width="1004" height="909" alt="image" src="https://github.com/user-attachments/assets/481eace6-a77d-485b-812f-29e0c1dd4733" />
 
-## Routes Configuration Explanation
+### Routes Configuration Explanation
 The 'web.php' file in Laravel defines the web routes of the application. Routes determine how incoming HTTP requests are handled and which controller methods or views are returned. In this project, the routes are organized into two main categories: **public routes** and **authenticated routes**.
 
 1. **Public Route**  
