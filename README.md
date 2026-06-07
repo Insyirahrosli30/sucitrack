@@ -219,9 +219,6 @@ The 'web.php' file in Laravel defines the web routes of the application. Routes 
 3. **Authentication Routes**  
    - The file also includes 'auth.php', which contains all authentication-related routes such as login, registration, and password reset.
 
-This routing structure ensures a clear separation between public and protected areas of the application. The **landing page** is open to all users, while sensitive features like the **dashboard**, **menstrual records management**, and **Qada tracking** are restricted to authenticated and verified users. The use of 'Route::resource' simplifies CRUD operations, and named routes improve readability and maintainability across the project.
-
-
 
 ## 9. Recommendations
 
