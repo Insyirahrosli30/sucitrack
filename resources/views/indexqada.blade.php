@@ -1,86 +1,92 @@
 <x-app-layout>
 
-<!-- HEADER -->
-<div class="border-b border-pink-200 pb-6 mb-8">
-    <h1 class="text-2xl font-bold">Missed Prayers (Qada')</h1>
-    <p class="text-sm text-gray-500 mt-1">
-        Track your missed prayers
-    </p>
-</div>
+<div class="flex justify-center pt-12">
 
-<!-- PRAYER STATUS OVERVIEW (RESTORED SECTION) -->
-<div class="bg-white border border-pink-100 rounded-xl p-6 mb-6">
+    <div class="w-full max-w-7xl space-y-8">
 
-    <h2 class="text-lg font-semibold mb-4">Prayer Status Overview</h2>
+        <!-- HEADER -->
+        <div class="bg-white/60 backdrop-blur-md border border-pink-100 rounded-3xl p-6 shadow-sm">
 
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+            <h1 class="text-2xl font-bold gradient-text">
+                Missed Prayers (Qada')
+            </h1>
 
-        <div>
-            <p class="text-xs text-gray-400">Subuh</p>
-            <p class="font-semibold text-gray-700">Pending</p>
+            <p class="text-sm text-gray-500 mt-2">
+                Track your missed prayers
+            </p>
+
         </div>
 
-        <div>
-            <p class="text-xs text-gray-400">Zohor</p>
-            <p class="font-semibold text-gray-700">Pending</p>
+        <!-- SUMMARY -->
+        <div class="grid grid-cols-3 gap-6">
+
+            <div class="bg-white/60 backdrop-blur-md p-6 rounded-3xl border border-pink-100 shadow-sm">
+                <p class="text-xs text-gray-400 uppercase">Pending</p>
+                <div class="text-3xl font-bold text-pink-600 mt-2">
+                    {{ $pendingQadaCount ?? 0 }}
+                </div>
+            </div>
+
+            <div class="bg-white/60 backdrop-blur-md p-6 rounded-3xl border border-pink-100 shadow-sm">
+                <p class="text-xs text-gray-400 uppercase">Completed</p>
+                <div class="text-3xl font-bold text-gray-800 mt-2">
+                    {{ $completedQadaCount ?? 0 }}
+                </div>
+            </div>
+
+            <div class="bg-white/60 backdrop-blur-md p-6 rounded-3xl border border-pink-100 shadow-sm">
+                <p class="text-xs text-gray-400 uppercase">Status</p>
+                <div class="text-lg font-semibold text-gray-700 mt-2">
+                    Tracking Active
+                </div>
+            </div>
+
         </div>
 
-        <div>
-            <p class="text-xs text-gray-400">Asar</p>
-            <p class="font-semibold text-gray-700">Pending</p>
-        </div>
+        <!-- TABLE -->
+        <div class="bg-white/60 backdrop-blur-md border border-pink-100 rounded-3xl p-6 shadow-sm">
 
-        <div>
-            <p class="text-xs text-gray-400">Maghrib</p>
-            <p class="font-semibold text-gray-700">Pending</p>
-        </div>
+            <table class="w-full text-sm">
 
-        <div>
-            <p class="text-xs text-gray-400">Isya'</p>
-            <p class="font-semibold text-gray-700">Pending</p>
+                <thead>
+                    <tr class="text-left text-gray-500 border-b">
+                        <th class="py-2">Date</th>
+                        <th class="py-2">Prayer</th>
+                        <th class="py-2">Status</th>
+                        <th class="py-2">Notes</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                @forelse($qadaLogs as $qada)
+
+                    <tr class="border-b">
+                        <td class="py-2">{{ $qada->qada_date }}</td>
+                        <td class="py-2">{{ $qada->prayer_type }}</td>
+                        <td class="py-2">
+                            {{ $qada->is_completed ? 'Completed' : 'Pending' }}
+                        </td>
+                        <td class="py-2">{{ $qada->notes ?? '-' }}</td>
+                    </tr>
+
+                @empty
+
+                    <tr>
+                        <td colspan="4" class="py-6 text-center text-gray-400">
+                            No Qada records yet
+                        </td>
+                    </tr>
+
+                @endforelse
+
+                </tbody>
+
+            </table>
+
         </div>
 
     </div>
-</div>
-
-<!-- SUMMARY CARDS -->
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-
-    <div class="bg-white p-6 rounded-xl border border-pink-100">
-        <p class="text-xs text-gray-400 uppercase">Pending</p>
-        <div class="text-3xl font-bold text-pink-600 mt-2">
-            {{ $pendingQadaCount ?? 0 }}
-        </div>
-    </div>
-
-    <div class="bg-white p-6 rounded-xl border border-pink-100">
-        <p class="text-xs text-gray-400 uppercase">Completed</p>
-        <div class="text-3xl font-bold mt-2">
-            {{ $completedQadaCount ?? 0 }}
-        </div>
-    </div>
-
-    <div class="bg-white p-6 rounded-xl border border-pink-100">
-        <p class="text-xs text-gray-400 uppercase">Status</p>
-        <div class="text-lg font-semibold mt-2 text-gray-700">
-            Tracking Active
-        </div>
-    </div>
-
-</div>
-
-<!-- ORIGINAL UI BLOCK (YOU PROVIDED - KEPT AS IS) -->
-<div class="bg-white border border-pink-100 rounded-xl p-8 text-center">
-
-    <div class="text-3xl">🕌</div>
-
-    <h3 class="font-semibold mt-4">
-        Qada System Active
-    </h3>
-
-    <p class="text-sm text-gray-400 mt-2">
-        Your records are connected
-    </p>
 
 </div>
 

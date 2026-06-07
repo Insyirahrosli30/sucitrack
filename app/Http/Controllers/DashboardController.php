@@ -1,94 +1,233 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\MenstrualRecord;
-use Illuminate\Http\Request;
+use App\Models\QadaLog;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        // 1. Get the current logged-in user
-        $user = auth()->user();
+        $userId = Auth::id();
 
-        // 2. Fetch the latest record for this user to check their status
-        $activeRecord = MenstrualRecord::where('user_id', $user->id)
-        ->orderBy('start_datetime', 'desc')
-        ->first();
+        $activeRecord = MenstrualRecord::where('user_id', $userId)
+            ->orderBy('start_datetime', 'desc')
+            ->first();
 
-        // 3. Status Calculations 
-        // If there is an active record and no end_datetime, they are currently in 'Haid' state
-        $isClean = true; 
-        if ($activeRecord && is_null($activeRecord->end_datetime)) {
-            $isClean = false;
-        }
+        // ------------------------------------------------------------
+        // LOGIK A: HARI SUCI
+        // ------------------------------------------------------------
+        $latestRecords = MenstrualRecord::where('user_id', $userId)
+            ->orderBy('start_datetime', 'desc')
+            ->take(2)
+            ->get();
 
-        // Calculate days of purity or default to 0
         $daysOfPurity = 0;
-        if ($isClean && $activeRecord && $activeRecord->end_datetime) {
-            $daysOfPurity = now()->diffInDays(\Carbon\Carbon::parse($activeRecord->end_datetime));
+        $isClean = true;
+
+        if ($latestRecords->count() > 0) {
+
+            $currentRecord = $latestRecords->first();
+
+            if (is_null($currentRecord->end_datetime)) {
+
+                $isClean = false;
+                $daysOfPurity = 0;
+
+            } else {
+
+                if ($latestRecords->count() == 2) {
+
+                    $previousRecord = $latestRecords->skip(1)->first();
+
+                    if ($previousRecord && $previousRecord->end_datetime) {
+
+                        $startOfNew = Carbon::parse($currentRecord->start_datetime);
+                        $endOfLast = Carbon::parse($previousRecord->end_datetime);
+
+                        $daysOfPurity = $endOfLast->diffInDays($startOfNew);
+                    }
+
+                } else {
+
+                    $daysOfPurity = Carbon::parse($currentRecord->end_datetime)
+                        ->diffInDays(now());
+                }
+            }
         }
 
-        // Mock counter for pending Qada' prayers (Update with your table logic when ready!)
-        $pendingQadaCount = 0; 
+        // ------------------------------------------------------------
+        // PRAYER TIMES
+        // ------------------------------------------------------------
+        $prayer = $this->getTodayPrayerTimes();
 
-    
-        return view('menstrual_records.dashboard', compact (
-             'isClean', 
-            'daysOfPurity', 
-            'pendingQadaCount', 
-            'activeRecord'
+        if (!$prayer) {
+            $prayer = [
+                'Subuh'   => '05:41',
+                'Zohor'   => '13:12',
+                'Asar'    => '16:38',
+                'Maghrib' => '19:24',
+                'Isya'    => '20:39',
+            ];
+        }
+
+        // ------------------------------------------------------------
+        // QADA CALCULATION
+        // ------------------------------------------------------------
+        $calculated = [
+            'Subuh' => 0,
+            'Zohor' => 0,
+            'Asar' => 0,
+            'Maghrib' => 0,
+            'Isya' => 0,
+        ];
+
+        $allRecords = MenstrualRecord::where('user_id', $userId)->get();
+
+        foreach ($allRecords as $record) {
+
+            if (!$record->end_datetime) continue;
+
+            $start = Carbon::parse($record->start_datetime);
+            $end = Carbon::parse($record->end_datetime);
+
+            foreach ($prayer as $name => $time) {
+
+                if (!$time) continue;
+
+                $startTime = Carbon::parse($start->toDateString() . ' ' . $time);
+                $endTime = Carbon::parse($end->toDateString() . ' ' . $time);
+
+                if ($start->lte($endTime) && $end->gte($startTime)) {
+                    $calculated[$name]++;
+                }
+            }
+        }
+
+        // ------------------------------------------------------------
+        // COMPLETED QADA
+        // ------------------------------------------------------------
+        $completedLogs = QadaLog::where('user_id', $userId)
+            ->where('is_completed', true)
+            ->selectRaw('prayer_type, count(*) as total')
+            ->groupBy('prayer_type')
+            ->pluck('total', 'prayer_type')
+            ->toArray();
+
+        $final = [];
+
+        foreach ($calculated as $key => $value) {
+            $final[$key] = max(0, $value - ($completedLogs[$key] ?? 0));
+        }
+
+        // ------------------------------------------------------------
+        // PENDING QADA
+        // ------------------------------------------------------------
+        $pendingQadaItems = QadaLog::where('user_id', $userId)
+            ->where('is_completed', false)
+            ->orderBy('qada_date', 'asc')
+            ->get();
+
+        $pendingQadaCount = $pendingQadaItems->count();
+
+        // ------------------------------------------------------------
+        // NEXT PRAYER (FIXED REAL TIME)
+        // ------------------------------------------------------------
+        $now = Carbon::now();
+
+        $nextPrayer = null;
+        $smallestDiff = null;
+
+        foreach ($prayer as $name => $time) {
+
+            if (!$time) continue;
+
+            // IMPORTANT FIX: bind prayer time to TODAY date
+            $prayerTime = Carbon::createFromFormat(
+                'Y-m-d H:i',
+                now()->format('Y-m-d') . ' ' . $time
+            );
+
+            if ($prayerTime->lt($now)) continue;
+
+            $diff = $now->diffInMinutes($prayerTime, false);
+
+            if ($smallestDiff === null || $diff < $smallestDiff) {
+                $smallestDiff = $diff;
+                $nextPrayer = $name;
+            }
+        }
+
+        // fallback (important for midnight case)
+        if (!$nextPrayer) {
+            $nextPrayer = 'Subuh';
+        }
+
+        $labels = [
+            'Subuh' => 'Subuh',
+            'Zohor' => 'Zohor',
+            'Asar' => 'Asar',
+            'Maghrib' => 'Maghrib',
+            'Isya' => 'Isyak',
+        ];
+
+        return view('dashboard', compact(
+            'activeRecord',
+            'daysOfPurity',
+            'isClean',
+            'pendingQadaCount',
+            'pendingQadaItems',
+            'allRecords',
+            'prayer',
+            'nextPrayer',
+            'labels',
+            'final'
         ));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function completeQada($id)
     {
-        //
+        $log = QadaLog::where('user_id', Auth::id())
+            ->findOrFail($id);
+
+        $log->update([
+            'is_completed' => true
+        ]);
+
+        return redirect()
+            ->route('dashboard')
+            ->with('success', 'Qada prayer marked as completed!');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    private function getTodayPrayerTimes()
     {
-        //
-    }
+        $response = Http::timeout(10)
+            ->get("https://api.waktusolat.app/v2/solat/KUL");
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+        if (!$response->successful()) return null;
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+        $data = $response->json();
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+        $today = now()->toDateString();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        foreach ($data['prayerTime'] ?? [] as $day) {
+
+            if (($day['date'] ?? null) === $today) {
+
+                return [
+                    'Subuh'   => substr($day['fajr'], 0, 5),
+                    'Zohor'   => substr($day['dhuhr'], 0, 5),
+                    'Asar'    => substr($day['asr'], 0, 5),
+                    'Maghrib' => substr($day['maghrib'], 0, 5),
+                    'Isya'    => substr($day['isha'], 0, 5),
+                ];
+            }
+        }
+
+        return null;
     }
 }
