@@ -1,4 +1,5 @@
-<img width="713" height="473" alt="image" src="https://github.com/user-attachments/assets/b8bb740d-f6a1-4f0c-ab41-7416c78d29e4" />## Menstrual and Qada Tracker System
+
+# Menstrual and Qada Tracker System
 ## Group Members
 **Alya Qistina Nadia binti Idris (231134)**
 * Leader
@@ -269,10 +270,6 @@ The MenstrualController manages all menstrual cycle records and integrates them 
 <img width="913" height="918" alt="Screenshot 2026-06-08 020726" src="https://github.com/user-attachments/assets/461b5b1e-0cb7-4a6f-a3de-8afa32dd2619" />
 <img width="804" height="907" alt="Screenshot 2026-06-08 020714" src="https://github.com/user-attachments/assets/f38ddaa0-01b1-4ac7-8f89-e33530306a33" />
 <img width="713" height="473" alt="Screenshot 2026-06-08 020835" src="https://github.com/user-attachments/assets/4f4f5f23-2959-4c8d-8a43-24aad9cb4889" />
-
-Here’s a short but detailed explanation you can use in your **project report** for the `DashboardController`:
-
----
 
 ### DashboardController Explanation
 
