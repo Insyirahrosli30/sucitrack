@@ -187,6 +187,7 @@ A one-to-many relationship exists between the tables, where one user can create 
 The sequence diagram illustrates the interaction between the user, SuciTrack system, database, and JAKIM API. The process begins when a user registers an account and logs into the system. The application then verifies the user's credentials through the database before granting access to the dashboard. When a menstrual record is created, the system stores the record in the database and retrieves prayer time information from the JAKIM API based on the selected zone. The processed data is then displayed on the dashboard, allowing users to monitor their menstrual cycle information and prayer-related records through a centralized interface.
 
 ## 7. User Interface (Completed System)
+<img width="1837" height="893" alt="image" src="https://github.com/user-attachments/assets/249a5d1d-3d5c-42f4-8137-b145410762e3" />
 <img width="1919" height="898" alt="image" src="https://github.com/user-attachments/assets/1e8f64f7-360e-4b80-922a-046a1cff2e90" /># SuciTrack – Menstrual Purity Tracker
 <img width="1918" height="954" alt="Screenshot 2026-06-08 012749" src="https://github.com/user-attachments/assets/cd7e753e-0637-49c4-966a-ee3a10275341" />
 <img width="1918" height="940" alt="Screenshot 2026-06-08 012733" src="https://github.com/user-attachments/assets/3a201abd-c28e-4110-8b5a-f220b7d759b5" />
@@ -194,8 +195,33 @@ The sequence diagram illustrates the interaction between the user, SuciTrack sys
 <img width="1919" height="898" alt="Screenshot 2026-06-08 012813" src="https://github.com/user-attachments/assets/a2be86c7-26e2-492b-bcd0-d4e53d495979" />
 <img width="1919" height="895" alt="Screenshot 2026-06-08 012804" src="https://github.com/user-attachments/assets/8409802c-9cd6-49eb-a57f-c2b3c4a1bf3e" />
 
-
 ## 8. Implementation Details
+routes.web.php
+<img width="1004" height="909" alt="image" src="https://github.com/user-attachments/assets/481eace6-a77d-485b-812f-29e0c1dd4733" />
+
+## Routes Configuration Explanation
+The 'web.php' file in Laravel defines the web routes of the application. Routes determine how incoming HTTP requests are handled and which controller methods or views are returned. In this project, the routes are organized into two main categories: **public routes** and **authenticated routes**.
+
+1. **Public Route**  
+   - The root URL ('/') is mapped to the 'landing' view.  
+   - This serves as the public homepage, accessible to all users without authentication.
+
+2. **Authenticated Routes**  
+   - These routes are grouped under middleware 'auth' and 'verified', ensuring only logged in and email-verified users can access them.  
+   - Key routes include:
+     - **Dashboard**: '/dashboard' calls 'DashboardController@index' and displays the main user dashboard.  
+     - **Menstrual Records**:  
+       - '/menstrual_records/end' calls 'MenstrualController@endCycle' to mark the end of a cycle.  
+       - 'Route::resource('menstrual_records', MenstrualController::class)' automatically generates full CRUD operations (create, read, update, delete) for menstrual records.  
+     - **Qada Page**: '/qada' calls 'QadaController@index' to display the Qada (missed prayers) page.  
+     - **Complete Qada**: '/dashboard/complete-qada/{id}' is a POST route that calls 'DashboardController@completeQada' to mark a specific Qada entry as completed.
+
+3. **Authentication Routes**  
+   - The file also includes 'auth.php', which contains all authentication-related routes such as login, registration, and password reset.
+
+This routing structure ensures a clear separation between public and protected areas of the application. The **landing page** is open to all users, while sensitive features like the **dashboard**, **menstrual records management**, and **Qada tracking** are restricted to authenticated and verified users. The use of 'Route::resource' simplifies CRUD operations, and named routes improve readability and maintainability across the project.
+
+
 
 ## 9. Recommendations
 
