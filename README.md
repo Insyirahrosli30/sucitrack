@@ -1,4 +1,4 @@
-## Menstrual and Qada Tracker System
+<img width="713" height="473" alt="image" src="https://github.com/user-attachments/assets/b8bb740d-f6a1-4f0c-ab41-7416c78d29e4" />## Menstrual and Qada Tracker System
 ## Group Members
 **Alya Qistina Nadia binti Idris (231134)**
 * Leader
@@ -259,9 +259,42 @@ The MenstrualController manages all menstrual cycle records and integrates them 
 7. **End Cycle**  
    - Redirects the user to edit the latest active cycle.  
    - If no active cycle exists, it shows an error message.
+  
+   ### DashboardController
+<img width="802" height="919" alt="Screenshot 2026-06-08 020825" src="https://github.com/user-attachments/assets/2e5986a4-acda-42e6-9792-2d745d39410a" />
+<img width="801" height="897" alt="Screenshot 2026-06-08 020815" src="https://github.com/user-attachments/assets/a06d11f9-9995-4404-b697-99883c7d1c2d" />
+<img width="874" height="913" alt="Screenshot 2026-06-08 020802" src="https://github.com/user-attachments/assets/0c67ed83-292b-4ceb-8aee-a447741b5bf8" />
+<img width="906" height="912" alt="Screenshot 2026-06-08 020753" src="https://github.com/user-attachments/assets/ab8bc85b-02a0-4d67-8f87-cefb6e3900ce" />
+<img width="814" height="917" alt="Screenshot 2026-06-08 020736" src="https://github.com/user-attachments/assets/4626da62-ae05-43b1-a551-ce07cf98da77" />
+<img width="913" height="918" alt="Screenshot 2026-06-08 020726" src="https://github.com/user-attachments/assets/461b5b1e-0cb7-4a6f-a3de-8afa32dd2619" />
+<img width="804" height="907" alt="Screenshot 2026-06-08 020714" src="https://github.com/user-attachments/assets/f38ddaa0-01b1-4ac7-8f89-e33530306a33" />
+<img width="713" height="473" alt="Screenshot 2026-06-08 020835" src="https://github.com/user-attachments/assets/4f4f5f23-2959-4c8d-8a43-24aad9cb4889" />
 
+Here’s a short but detailed explanation you can use in your **project report** for the `DashboardController`:
 
+---
 
+### DashboardController Explanation
+
+The 'DashboardController' is responsible for displaying the main dashboard, summarizing menstrual cycle status, purity days, prayer times, and Qada (missed prayers) tracking.
+
+1. **Index Method**  
+   - Retrieves the latest menstrual records for the authenticated user.  
+   - **Purity Logic**: Calculates `daysOfPurity` (days between cycles or since last ended cycle) and determines whether the user is currently clean (`isClean`).  
+   - **Prayer Times**: Fetches today’s prayer times from the WaktuSolat API, with fallback static values if the API fails.  
+   - **Qada Calculation**: Iterates through menstrual records to count missed prayers during cycles, then subtracts completed Qada logs to show pending totals.  
+   - **Pending Qada**: Retrieves all incomplete Qada logs, ordered by date, and counts them.  
+   - **Next Prayer**: Determines the upcoming prayer based on current time, ensuring correct fallback after midnight.  
+   - Passes all computed data (`activeRecord`, `daysOfPurity`, `isClean`, `prayer`, `final`, `pendingQadaItems`, etc.) to the `dashboard` view.
+
+2. **Complete Qada**  
+   - Marks a specific Qada log as completed by updating its status.  
+   - Redirects back to the dashboard with a success message.
+
+3. **getTodayPrayerTimes**  
+   - Calls the WaktuSolat API (`https://api.waktusolat.app/v2/solat/KUL`) to fetch prayer times for Kuala Lumpur.  
+   - Extracts today’s timings (Subuh, Zohor, Asar, Maghrib, Isya) and returns them in a simplified format.  
+   - Returns `null` if the API fails or data is missing.
 
 ## 9. Recommendations
 
